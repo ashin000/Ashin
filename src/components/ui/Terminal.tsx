@@ -49,6 +49,7 @@ export default function Terminal() {
         { text: '  about             - Story and genesis details', type: 'output' },
         { text: '  skills            - Stack and capabilities summary', type: 'output' },
         { text: '  projects          - List case studies summary', type: 'output' },
+        { text: '  admin             - Open the private portfolio editor sign-in', type: 'success' },
         { text: '  sudo hire ashin   - Open the primary interview payload', type: 'success' },
         { text: '  clear             - Flush terminal log history', type: 'output' },
         { text: '  exit              - Terminate terminal session', type: 'output' }
@@ -74,6 +75,18 @@ export default function Terminal() {
         { text: 'CASE STUDIES SUMMARY:', type: 'success' },
         ...projectSummary.map((line) => ({ text: line, type: 'output' as const }))
       );
+    } else if (['admin', 'admin login', 'sudo admin'].includes(trimmed)) {
+      newHistory.push(
+        { text: 'Opening the private admin sign-in…', type: 'success' },
+        { text: 'Enter your username and password on the secure sign-in page.', type: 'output' }
+      );
+      setHistory(newHistory);
+      setInput('');
+      window.setTimeout(() => {
+        setTerminalOpen(false);
+        window.location.assign('/admin');
+      }, 500);
+      return;
     } else if (trimmed === 'sudo hire ashin') {
       newHistory.push(
         { text: 'Loading AI Engineer...', type: 'success' },

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, LockKeyhole, LogOut, Plus, Save, ShieldCheck, Trash2 } from 'lucide-react';
+import { ArrowLeft, ImagePlus, LockKeyhole, LogOut, Plus, Save, ShieldCheck, Trash2, X } from 'lucide-react';
 import { defaultPortfolioContent } from '../../data/defaultPortfolioContent';
 import type { EditableItem, EditableValue, PortfolioContent } from '../../data/portfolioContent';
 
@@ -17,6 +17,44 @@ const sections: { key: keyof PortfolioContent; label: string }[] = [
 
 const fieldClass = 'w-full rounded-xl border border-white/10 bg-[#080d19] px-3.5 py-3 text-sm text-slate-100 outline-none transition focus:border-blue-400/70 focus:ring-2 focus:ring-blue-400/10';
 const labelClass = 'mb-2 block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-400';
+const MAX_UPLOAD_BYTES = 180 * 1024;
+
+async function optimizeImage(file: File): Promise<string> {
+  if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+    throw new Error('Choose a JPG, PNG, or WebP image.');
+  }
+  if (file.size > 15 * 1024 * 1024) throw new Error('Choose an image smaller than 15 MB.');
+
+  const bitmap = await createImageBitmap(file);
+  const canvas = document.createElement('canvas');
+  const initialScale = Math.min(1, 1400 / bitmap.width, 1400 / bitmap.height);
+  let scale = initialScale;
+  let blob: Blob | null = null;
+
+  while (scale >= 0.25) {
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const context = canvas.getContext('2d');
+    if (!context) throw new Error('Could not process this image in the browser.');
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+    for (const quality of [0.82, 0.7, 0.58, 0.46]) {
+      blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/webp', quality));
+      if (blob && blob.size <= MAX_UPLOAD_BYTES) break;
+    }
+    if (blob && blob.size <= MAX_UPLOAD_BYTES) break;
+    scale *= 0.75;
+  }
+  bitmap.close();
+  if (!blob || blob.size > MAX_UPLOAD_BYTES) throw new Error('This image could not be compressed enough. Try a smaller image.');
+
+  return await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => typeof reader.result === 'string' ? resolve(reader.result) : reject(new Error('Could not read the optimized image.'));
+    reader.onerror = () => reject(new Error('Could not read the optimized image.'));
+    reader.readAsDataURL(blob);
+  });
+}
 
 function parseContent(value: unknown): PortfolioContent | null {
   if (!value || typeof value !== 'object') return null;
@@ -45,6 +83,7 @@ export default function AdminApp() {
   const [content, setContent] = useState<PortfolioContent>(defaultPortfolioContent);
   const [activeSection, setActiveSection] = useState<keyof PortfolioContent>('profile');
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState<string | null>(null);
   const [notice, setNotice] = useState('');
 
   useEffect(() => {
@@ -138,6 +177,21 @@ export default function AdminApp() {
     const existingItems = previous[activeSection] as EditableItem[];
     return { ...previous, [activeSection]: [...existingItems, blankItem(existingItems[0])] };
   });
+  const handleImageUpload = async (file: File | undefined, itemIndex: number, field: string) => {
+    if (!file) return;
+    const uploadKey = `${activeSection}-${itemIndex}-${field}`;
+    setUploading(uploadKey);
+    setNotice('Optimizing image…');
+    try {
+      const imageData = await optimizeImage(file);
+      updateField(itemIndex, field, imageData);
+      setNotice('Image added. Select “Save and publish” to save it.');
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Could not upload this image.');
+    } finally {
+      setUploading(null);
+    }
+  };
 
   if (authenticated === null) {
     return <div className="min-h-screen bg-[#050816]" aria-label="Checking admin session" />;
@@ -219,6 +273,32 @@ export default function AdminApp() {
                 <div className="grid gap-4 md:grid-cols-2">
                   {Object.entries(item).map(([field, value]) => {
                     if (field === 'icon' || field === 'iconKey') return null;
+                    if (field === 'imageUrl') {
+                      const uploadKey = `${activeSection}-${itemIndex}-${field}`;
+                      return (
+                        <div key={field} className="md:col-span-2">
+                          <span className={labelClass}>{field === 'imageUrl' && activeSection === 'certificates' ? 'Certificate image' : 'Profile image'}</span>
+                          <div className="flex flex-wrap items-center gap-4 rounded-xl border border-dashed border-white/15 bg-white/[0.02] p-4">
+                            {typeof value === 'string' && value ? (
+                              <div className="relative h-24 w-36 overflow-hidden rounded-lg border border-white/10 bg-black/20">
+                                <img src={value} alt="Current upload preview" className="h-full w-full object-contain" />
+                                <button type="button" aria-label="Remove uploaded image" onClick={() => updateField(itemIndex, field, '')} className="absolute right-1 top-1 rounded-md bg-black/75 p-1 text-white hover:bg-rose-500"><X className="h-3.5 w-3.5" /></button>
+                              </div>
+                            ) : (
+                              <div className="grid h-24 w-36 place-items-center rounded-lg border border-white/10 bg-white/[0.03] text-slate-500"><ImagePlus className="h-7 w-7" /></div>
+                            )}
+                            <div className="min-w-[180px] flex-1">
+                              <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-400/25 bg-blue-400/10 px-3.5 py-2.5 text-xs font-bold text-blue-100 transition hover:bg-blue-400/20">
+                                <ImagePlus className="h-4 w-4" />
+                                {uploading === uploadKey ? 'Optimizing…' : value ? 'Choose another image' : 'Choose image'}
+                                <input type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading !== null} onChange={(event) => { void handleImageUpload(event.target.files?.[0], itemIndex, field); event.currentTarget.value = ''; }} className="sr-only" />
+                              </label>
+                              <p className="mt-2 text-xs leading-5 text-slate-500">JPG, PNG, or WebP. Images are optimized in your browser and saved with your content (up to 180 KB each).</p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
                     const longText = typeof value === 'string' && (value.length > 100 || /description|summary|solution|problem|architecture|challenge|lesson|paragraph|intro|mission|vision|values/i.test(field));
                     return (
                       <label key={field} className={`block ${longText || Array.isArray(value) ? 'md:col-span-2' : ''}`}>

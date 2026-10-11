@@ -1,6 +1,7 @@
 import { errorResponse, isAdminRequest, isSameOrigin, jsonResponse, type RequestContext } from '../../_shared/auth';
 
-const MAX_CONTENT_BYTES = 300_000;
+// Allow several resized certificate/profile images while staying below D1's per-row limit.
+const MAX_CONTENT_BYTES = 1_500_000;
 const sections = ['profile', 'about', 'contact', 'stats', 'experience', 'skills', 'projects', 'certificates', 'services'];
 
 export const onRequestGet = async ({ request, env }: RequestContext) => {

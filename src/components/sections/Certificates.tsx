@@ -14,6 +14,7 @@ export interface Certificate {
   category: string;
   verifyUrl: string;
   imageColor: string; // Dynamic abstract color gradient representing the certificate
+  imageUrl?: string;
 }
 
 export const certificatesData: Certificate[] = [
@@ -26,6 +27,7 @@ export const certificatesData: Certificate[] = [
     category: 'Machine Learning',
     verifyUrl: 'https://verify.com',
     imageColor: 'from-orange-500/20 to-amber-500/20',
+    imageUrl: '',
   },
   {
     id: 'cert-gcp-ml',
@@ -36,6 +38,7 @@ export const certificatesData: Certificate[] = [
     category: 'Cloud',
     verifyUrl: 'https://verify.com',
     imageColor: 'from-blue-500/20 to-indigo-500/20',
+    imageUrl: '',
   },
   {
     id: 'cert-dl-spec',
@@ -46,6 +49,7 @@ export const certificatesData: Certificate[] = [
     category: 'Artificial Intelligence',
     verifyUrl: 'https://verify.com',
     imageColor: 'from-purple-500/20 to-pink-500/20',
+    imageUrl: '',
   },
   {
     id: 'cert-python-adv',
@@ -56,6 +60,7 @@ export const certificatesData: Certificate[] = [
     category: 'Programming',
     verifyUrl: 'https://verify.com',
     imageColor: 'from-green-500/20 to-teal-500/20',
+    imageUrl: '',
   },
   {
     id: 'cert-ui-figma',
@@ -66,6 +71,7 @@ export const certificatesData: Certificate[] = [
     category: 'UI UX',
     verifyUrl: 'https://verify.com',
     imageColor: 'from-pink-500/20 to-rose-500/20',
+    imageUrl: '',
   },
   {
     id: 'cert-hack-ai',
@@ -76,6 +82,7 @@ export const certificatesData: Certificate[] = [
     category: 'Hackathons',
     verifyUrl: 'https://verify.com',
     imageColor: 'from-blue-600/30 to-purple-600/30',
+    imageUrl: '',
   },
 ];
 
@@ -190,7 +197,11 @@ export default function Certificates() {
                     {/* Background abstract gradient mockup */}
                     <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${cert.imageColor}`} />
 
-                    <div className="flex flex-col gap-4 mt-2">
+                    {cert.imageUrl ? (
+                      <img src={cert.imageUrl} alt={`${cert.title} certificate`} className="absolute inset-0 h-full w-full object-cover opacity-15" />
+                    ) : null}
+
+                    <div className="relative z-[1] flex flex-col gap-4 mt-2">
                       <div className="flex justify-between items-start">
                         <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-blue-400 shadow-premium-glow">
                           <Award className="w-5 h-5" />
@@ -210,7 +221,7 @@ export default function Certificates() {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between border-t border-white/5 pt-4 mt-4">
+                    <div className="relative z-[1] flex items-center justify-between border-t border-white/5 pt-4 mt-4">
                       <div className="flex items-center gap-1.5 font-body text-[10px] text-subtext/60">
                         <Calendar className="w-3.5 h-3.5" />
                         {cert.date}
@@ -282,9 +293,15 @@ export default function Certificates() {
 
                 {/* Abstract Certificate Visual Header */}
                 <div className={`h-40 rounded-xl bg-gradient-to-tr ${selectedCert.imageColor} border border-white/5 flex flex-col items-center justify-center relative overflow-hidden`}>
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1),transparent_70%)]" />
-                  <Award className="w-12 h-12 text-blue-400 drop-shadow-[0_0_10px_rgba(96,165,250,0.5)] mb-2" />
-                  <span className="font-heading text-xs font-semibold text-white/40 uppercase tracking-[0.2em]">{selectedCert.issuer}</span>
+                  {selectedCert.imageUrl ? (
+                    <img src={selectedCert.imageUrl} alt={`${selectedCert.title} certificate`} className="absolute inset-0 h-full w-full object-contain bg-[#080c19]" />
+                  ) : (
+                    <>
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1),transparent_70%)]" />
+                      <Award className="w-12 h-12 text-blue-400 drop-shadow-[0_0_10px_rgba(96,165,250,0.5)] mb-2" />
+                      <span className="font-heading text-xs font-semibold text-white/40 uppercase tracking-[0.2em]">{selectedCert.issuer}</span>
+                    </>
+                  )}
                 </div>
 
                 {/* Certificate details */}
