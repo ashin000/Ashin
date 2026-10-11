@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Terminal as TerminalIcon } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
+import { usePortfolioContent } from '../../store/PortfolioContentContext';
 
 interface TerminalLine {
   text: string;
@@ -10,6 +11,7 @@ interface TerminalLine {
 
 export default function Terminal() {
   const { terminalOpen, setTerminalOpen, setCursorMode } = useUIStore();
+  const { content } = usePortfolioContent();
   const [input, setInput] = useState('');
   const [history, setHistory] = useState<TerminalLine[]>([
     { text: 'System Console [v1.0.8]', type: 'success' },
@@ -52,24 +54,25 @@ export default function Terminal() {
         { text: '  exit              - Terminate terminal session', type: 'output' }
       );
     } else if (trimmed === 'about') {
+      const biography = Array.isArray(content.about.paragraphs) ? content.about.paragraphs : [];
       newHistory.push(
         { text: 'ABOUT ASHIN R:', type: 'success' },
-        { text: '  Curious AI engineer building systems bridging ML data layers and frontends.', type: 'output' },
-        { text: '  Specializes in automation, python scripting, and IoT edge devices.', type: 'output' }
+        ...biography.map((paragraph) => ({ text: `  ${paragraph}`, type: 'output' as const }))
       );
     } else if (trimmed === 'skills') {
+      const skillSummary = content.skills.map((category) => {
+        const names = Array.isArray(category.skills) ? category.skills.join(', ') : '';
+        return `  ${String(category.category ?? 'Skills')} : ${names}`;
+      });
       newHistory.push(
         { text: 'STACK CAPABILITIES:', type: 'success' },
-        { text: '  Languages : Python, TypeScript, Java, C, SQL', type: 'output' },
-        { text: '  AI/ML     : TensorFlow, PyTorch, Scikit Learn, OpenCV', type: 'output' },
-        { text: '  Cloud/Ops : Linux, AWS, Docker, GitHub Actions', type: 'output' }
+        ...skillSummary.map((line) => ({ text: line, type: 'output' as const }))
       );
     } else if (trimmed === 'projects') {
+      const projectSummary = content.projects.map((project) => `  - ${String(project.title ?? 'Project')} (${String(project.subtitle ?? '')})`);
       newHistory.push(
         { text: 'CASE STUDIES SUMMARY:', type: 'success' },
-        { text: '  - AI Linux Administration Assistant (FastAPI, LLM command compiler)', type: 'output' },
-        { text: '  - Cyber Incident Reporting System (Node.js, MongoDB threat class)', type: 'output' },
-        { text: '  - Waste Segregation IoT (Raspberry Pi, OpenCV object sorter)', type: 'output' }
+        ...projectSummary.map((line) => ({ text: line, type: 'output' as const }))
       );
     } else if (trimmed === 'sudo hire ashin') {
       newHistory.push(
@@ -117,20 +120,20 @@ export default function Terminal() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-70 flex items-center justify-center p-4 md:p-12 bg-background/90 backdrop-blur-md"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 lg:p-10 bg-[#030610]/98 backdrop-blur-xl"
         >
           {/* Shell Container */}
           <motion.div
             initial={{ scale: 0.95, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.95, y: 20 }}
-            className="w-full max-w-3xl h-[450px] md:h-[500px] rounded-xl border border-white/10 bg-[#050816] flex flex-col overflow-hidden shadow-premium-glow-lg text-left"
+            className="w-full max-w-5xl h-[min(78svh,720px)] min-h-[360px] rounded-2xl border border-blue-400/30 bg-[#080c19] flex flex-col overflow-hidden shadow-[0_24px_100px_rgba(0,0,0,0.8),0_0_45px_rgba(59,130,246,0.18)] text-left ring-1 ring-white/10"
           >
             {/* Window title bar */}
-            <div className="bg-white/5 border-b border-white/5 px-4 py-3 flex items-center justify-between select-none">
+            <div className="bg-[#121a2a] border-b border-white/10 px-4 sm:px-6 py-3.5 flex items-center justify-between select-none">
               <div className="flex items-center gap-2">
                 <TerminalIcon className="w-4 h-4 text-blue-400" />
-                <span className="font-code text-xs text-white/80 font-medium">
+                <span className="font-code text-xs sm:text-sm text-white font-semibold">
                   ashin@secure-shell:~/terminal
                 </span>
               </div>
@@ -148,7 +151,7 @@ export default function Terminal() {
 
             {/* Terminal logs area */}
             <div
-              className="flex-1 p-6 overflow-y-auto font-code text-xs md:text-sm flex flex-col gap-2.5 scrollbar-thin scrollbar-thumb-white/5 scrollbar-track-transparent"
+              className="flex-1 p-5 sm:p-8 overflow-y-auto bg-[#050816] font-code text-sm sm:text-base flex flex-col gap-3 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
               onClick={() => inputRef.current?.focus()}
             >
               {history.map((line, idx) => (
@@ -161,7 +164,7 @@ export default function Terminal() {
                       ? 'text-emerald-400 font-semibold'
                       : line.type === 'error'
                       ? 'text-red-400 font-semibold'
-                      : 'text-subtext/80'
+                      : 'text-slate-300'
                   }`}
                 >
                   {line.text}
@@ -171,8 +174,8 @@ export default function Terminal() {
             </div>
 
             {/* Input prompt bar */}
-            <div className="border-t border-white/5 px-6 py-4 bg-white/[0.01] flex items-center gap-2">
-              <span className="font-code text-xs md:text-sm text-blue-400 font-semibold select-none flex-shrink-0">
+            <div className="border-t border-blue-400/20 px-4 sm:px-6 py-4 bg-[#101827] flex items-center gap-2">
+              <span className="font-code text-xs sm:text-sm text-blue-300 font-bold select-none flex-shrink-0">
                 visitor@ashin.dev:~$
               </span>
               <input
@@ -183,7 +186,7 @@ export default function Terminal() {
                 onKeyDown={handleKeyDown}
                 onFocus={() => setCursorMode('text')}
                 onBlur={() => setCursorMode('default')}
-                className="flex-1 bg-transparent border-none outline-none font-code text-xs md:text-sm text-white placeholder-white/10"
+                className="flex-1 min-w-0 bg-transparent border-none outline-none font-code text-sm sm:text-base text-white placeholder-slate-500 caret-blue-300"
                 placeholder="type command..."
                 autoFocus
               />

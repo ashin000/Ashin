@@ -1,6 +1,13 @@
 {
-  "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "portfolio",
-  "compatibility_date": "2026-08-25",
-  "pages_build_output_dir": "./dist"
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "portfolio",
+	"compatibility_date": "2026-08-25",
+	"pages_build_output_dir": "./dist",
+	"d1_databases": [
+		{
+			"binding": "CONTENT_DB",
+			"database_name": "portfolio-content-db",
+			"database_id": "7ab37d61-6db0-477b-a4d3-88a1cc5b7632"
+		}
+	]
 }

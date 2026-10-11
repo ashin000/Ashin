@@ -6,9 +6,11 @@ import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { useUIStore } from '../../store/uiStore';
 import Magnetic from '../ui/Magnetic';
 import LinkedInBadge from '../ui/LinkedInBadge';
+import { usePortfolioContent } from '../../store/PortfolioContentContext';
 
 export default function Contact() {
   const { setCursorMode } = useUIStore();
+  const { content } = usePortfolioContent();
   const formRef = useRef<HTMLFormElement>(null);
   
   const [formData, setFormData] = useState({
@@ -83,10 +85,10 @@ export default function Contact() {
           <div className="lg:col-span-5 flex flex-col gap-8 text-left">
             <div>
               <h3 className="font-heading text-xl font-bold text-white tracking-tight mb-3">
-                Let's Build Something Revolutionary
+                {String(content.contact.introTitle ?? '')}
               </h3>
               <p className="font-body text-xs md:text-sm text-subtext leading-relaxed">
-                Whether you want to discuss AI integrations, full-stack architectures, or have an open role for a forward-thinking AI Engineer—drop a line.
+                {String(content.contact.intro ?? '')}
               </p>
             </div>
 
@@ -110,8 +112,8 @@ export default function Contact() {
                 </div>
                 <div>
                   <span className="block font-body text-[9px] text-subtext/50 uppercase tracking-wider">Email Address</span>
-                  <a href="mailto:ashin@example.com" className="font-code text-xs md:text-sm text-white hover:text-blue-400 transition-colors">
-                    ashin@example.com
+                  <a href={`mailto:${String(content.contact.email ?? '')}`} className="font-code text-xs md:text-sm text-white hover:text-blue-400 transition-colors">
+                    {String(content.contact.email ?? '')}
                   </a>
                 </div>
               </div>
@@ -122,8 +124,8 @@ export default function Contact() {
                 </div>
                 <div>
                   <span className="block font-body text-[9px] text-subtext/50 uppercase tracking-wider">Phone number</span>
-                  <a href="tel:+919876543210" className="font-code text-xs md:text-sm text-white hover:text-blue-400 transition-colors">
-                    +91 98765 43210
+                  <a href={`tel:${String(content.contact.phone ?? '')}`} className="font-code text-xs md:text-sm text-white hover:text-blue-400 transition-colors">
+                    {String(content.contact.phone ?? '')}
                   </a>
                 </div>
               </div>
@@ -135,7 +137,7 @@ export default function Contact() {
                 <div>
                   <span className="block font-body text-[9px] text-subtext/50 uppercase tracking-wider">Current Location</span>
                   <span className="font-code text-xs md:text-sm text-white">
-                    Kerala, India
+                    {String(content.contact.location ?? '')}
                   </span>
                 </div>
               </div>
@@ -159,7 +161,7 @@ export default function Contact() {
             <div className="border-t border-white/5 pt-6 mt-2 flex flex-wrap items-center justify-between gap-4">
               <Magnetic strength={0.25}>
                 <a
-                  href="/resume.pdf"
+                  href={String(content.profile.resumeUrl ?? '/resume.pdf')}
                   download="Ashin-R-Resume.pdf"
                   onMouseEnter={() => setCursorMode('hover')}
                   onMouseLeave={() => setCursorMode('default')}
@@ -174,7 +176,7 @@ export default function Contact() {
               <div className="flex items-center gap-4">
                 <Magnetic strength={0.3}>
                   <a
-                    href="https://in.linkedin.com/in/ashin-r-05a4b9325"
+                    href={String(content.contact.linkedin ?? '#')}
                     target="_blank"
                     rel="noopener noreferrer"
                     onMouseEnter={() => setCursorMode('magnetic')}
@@ -186,7 +188,7 @@ export default function Contact() {
                 </Magnetic>
                 <Magnetic strength={0.3}>
                   <a
-                    href="https://github.com/ashin000"
+                    href={String(content.contact.github ?? '#')}
                     target="_blank"
                     rel="noopener noreferrer"
                     onMouseEnter={() => setCursorMode('magnetic')}
@@ -198,7 +200,7 @@ export default function Contact() {
                 </Magnetic>
                 <Magnetic strength={0.3}>
                   <a
-                    href="https://instagram.com"
+                    href={String(content.contact.instagram ?? '#')}
                     target="_blank"
                     rel="noopener noreferrer"
                     onMouseEnter={() => setCursorMode('magnetic')}

@@ -2,10 +2,11 @@ import CountUp from 'react-countup';
 import { motion } from 'framer-motion';
 import { FolderCode, Award, Clock, Briefcase, Cpu } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
+import { usePortfolioContent } from '../../store/PortfolioContentContext';
 
 const CountUpComponent = (CountUp as any).default || CountUp;
 
-const statsData = [
+export const statsData = [
   {
     value: 15,
     suffix: '+',
@@ -43,8 +44,15 @@ const statsData = [
   },
 ];
 
+const statIcons = new Map(statsData.map((stat) => [stat.label, stat.icon] as const));
+
 export default function Stats() {
   const { setCursorMode } = useUIStore();
+  const { content } = usePortfolioContent();
+  const editableStats = content.stats.map((stat) => ({
+    ...stat,
+    icon: statIcons.get(String(stat.iconKey ?? '')) ?? FolderCode,
+  })) as unknown as typeof statsData;
 
   return (
     <section className="py-16 relative overflow-hidden px-6 md:px-12 bg-[#050816] border-t border-white/5">
@@ -52,7 +60,7 @@ export default function Stats() {
         
         {/* Responsive Grid */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6 md:gap-8">
-          {statsData.map((stat, i) => {
+          {editableStats.map((stat, i) => {
             const IconComponent = stat.icon;
             return (
               <motion.div

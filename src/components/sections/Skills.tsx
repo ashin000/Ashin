@@ -48,8 +48,17 @@ import {
 } from 'react-icons/fa';
 
 import { VscVscode } from 'react-icons/vsc';
+import { usePortfolioContent } from '../../store/PortfolioContentContext';
 
-const skillsData = [
+const categoryIcons: Record<string, typeof Code> = {
+  Programming: Code,
+  Frontend: Layout,
+  Backend: Server,
+  Databases: Database,
+  'Artificial Intelligence': BrainCircuit,
+  'DevOps & Tools': GitBranch,
+};
+export const skillsData = [
   {
     category: 'Programming',
     icon: Code,
@@ -125,9 +134,11 @@ const skillsData = [
     ],
   },
 ];
+const skillIcons = new Map(skillsData.flatMap((group) => group.skills.map((skill) => [skill.name, skill.icon] as const)));
 
 export default function Skills() {
   const { setCursorMode } = useUIStore();
+  const { content } = usePortfolioContent();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const containerVariants = {
@@ -183,13 +194,16 @@ export default function Skills() {
           variants={containerVariants}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
         >
-          {skillsData.map((category, index) => {
-            const Icon = category.icon;
+          {content.skills.map((category, index) => {
+            const categoryName = String(category.category ?? 'Skills');
+            const categoryColor = String(category.color ?? '#3B82F6');
+            const Icon = categoryIcons[categoryName] ?? Code;
+            const skillNames = Array.isArray(category.skills) ? category.skills : [];
             const isHovered = hoveredIndex === index;
 
             return (
               <motion.div
-                key={category.category}
+                key={categoryName}
                 variants={cardVariants}
                 onMouseEnter={() => {
                   setHoveredIndex(index);
@@ -202,9 +216,9 @@ export default function Skills() {
                 className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 relative overflow-hidden transition-all duration-500 select-none group"
                 style={{
                   transform: isHovered ? 'translateY(-6px)' : 'translateY(0)',
-                  borderColor: isHovered ? `${category.color}33` : 'rgba(255, 255, 255, 0.08)',
+                  borderColor: isHovered ? `${categoryColor}33` : 'rgba(255, 255, 255, 0.08)',
                   boxShadow: isHovered
-                    ? `0 10px 30px -15px ${category.color}44, 0 0 20px -5px ${category.color}22`
+                    ? `0 10px 30px -15px ${categoryColor}44, 0 0 20px -5px ${categoryColor}22`
                     : 'none',
                 }}
               >
@@ -212,7 +226,7 @@ export default function Skills() {
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                   style={{
-                    background: `radial-gradient(circle at 50% 10%, ${category.color}0d, transparent 50%)`,
+                    background: `radial-gradient(circle at 50% 10%, ${categoryColor}0d, transparent 50%)`,
                   }}
                 />
 
@@ -221,25 +235,25 @@ export default function Skills() {
                   <div
                     className="p-2.5 rounded-xl border transition-colors duration-300"
                     style={{
-                      backgroundColor: `${category.color}10`,
-                      borderColor: `${category.color}30`,
-                      color: category.color,
+                      backgroundColor: `${categoryColor}10`,
+                      borderColor: `${categoryColor}30`,
+                      color: categoryColor,
                     }}
                   >
                     <Icon className="w-5 h-5" />
                   </div>
                   <h3 className="font-heading text-lg font-bold text-white tracking-wide">
-                    {category.category}
+                    {categoryName}
                   </h3>
                 </div>
 
                 {/* Grid of skills */}
                 <div className="grid grid-cols-2 gap-3 relative z-10">
-                  {category.skills.map((skill) => {
-                    const SkillIcon = skill.icon;
+                  {skillNames.map((skillName) => {
+                    const SkillIcon = skillIcons.get(skillName) ?? Code;
                     return (
                       <div
-                        key={skill.name}
+                        key={skillName}
                         className="flex items-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/3 hover:bg-white/5 hover:border-white/10 transition-premium text-left group/skill"
                       >
                         <span 
@@ -249,7 +263,7 @@ export default function Skills() {
                           <SkillIcon className="w-3.5 h-3.5 group-hover/skill:text-[var(--hover-color)] transition-colors duration-300" />
                         </span>
                         <span className="font-body text-[11px] md:text-xs font-medium text-subtext group-hover/skill:text-white transition-colors duration-300">
-                          {skill.name}
+                          {skillName}
                         </span>
                       </div>
                     );

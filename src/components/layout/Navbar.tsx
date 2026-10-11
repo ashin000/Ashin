@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Terminal as TerminalIcon, Menu, X, ArrowUpRight } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
 import Magnetic from '../ui/Magnetic';
+import { usePortfolioContent } from '../../store/PortfolioContentContext';
 
 const navItems = [
   { label: 'Home', href: '#home' },
@@ -17,6 +18,7 @@ const navItems = [
 
 export default function Navbar() {
   const { activeSection, setActiveSection, toggleTerminal, setCursorMode } = useUIStore();
+  const { content } = usePortfolioContent();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -80,7 +82,7 @@ export default function Navbar() {
             AR
           </div>
           <span className="hidden sm:inline-block group-hover:text-blue-400 transition-colors">
-            ASHIN R.
+            {String(content.profile.name ?? 'ASHIN R')}.
           </span>
         </a>
 
@@ -133,7 +135,7 @@ export default function Navbar() {
           {/* Premium Resume Button */}
           <Magnetic strength={0.25}>
             <a
-              href="/resume.pdf"
+              href={String(content.profile.resumeUrl ?? '/resume.pdf')}
               download="Ashin-R-Resume.pdf"
               onMouseEnter={() => setCursorMode('hover')}
               onMouseLeave={() => setCursorMode('default')}
@@ -192,7 +194,7 @@ export default function Navbar() {
                 );
               })}
               <a
-                href="/resume.pdf"
+                href={String(content.profile.resumeUrl ?? '/resume.pdf')}
                 download="Ashin-R-Resume.pdf"
                 className="flex items-center justify-center gap-2 py-3 mt-2 text-center text-xs font-semibold uppercase tracking-wider text-white border border-blue-500/30 rounded-lg bg-blue-500/10"
               >

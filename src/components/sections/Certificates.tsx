@@ -3,19 +3,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Search, X, Award, ExternalLink, Calendar } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
 import Magnetic from '../ui/Magnetic';
+import { usePortfolioContent } from '../../store/PortfolioContentContext';
 
-interface Certificate {
+export interface Certificate {
   id: string;
   title: string;
   issuer: string;
   date: string;
   credentialId: string;
-  category: 'Artificial Intelligence' | 'Machine Learning' | 'Programming' | 'Cloud' | 'UI UX' | 'Hackathons';
+  category: string;
   verifyUrl: string;
   imageColor: string; // Dynamic abstract color gradient representing the certificate
 }
 
-const certificatesData: Certificate[] = [
+export const certificatesData: Certificate[] = [
   {
     id: 'cert-tf-dev',
     title: 'TensorFlow Developer Certificate',
@@ -76,24 +77,13 @@ const certificatesData: Certificate[] = [
     verifyUrl: 'https://verify.com',
     imageColor: 'from-blue-600/30 to-purple-600/30',
   },
-  {
-    id: 'cert-hack-ai',
-    title: 'First Place - AI Agents Global Hackathon',
-    issuer: 'Techstars & OpenAI',
-    date: 'Feb 2025',
-    credentialId: 'HACK-AI-OPENAI',
-    category: 'Hackathons',
-    verifyUrl: 'https://verify.com',
-    imageColor: 'from-blue-600/30 to-purple-600/30',
-  },
-
-
 ];
-
-const categories = ['All', 'Artificial Intelligence', 'Machine Learning', 'Programming', 'Cloud', 'UI UX', 'Hackathons'];
 
 export default function Certificates() {
   const { setCursorMode } = useUIStore();
+  const { content } = usePortfolioContent();
+  const certificates = content.certificates as unknown as Certificate[];
+  const categories = ['All', ...new Set(certificates.map((certificate) => certificate.category).filter(Boolean))];
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
@@ -101,7 +91,7 @@ export default function Certificates() {
   const carouselRef = useRef<HTMLDivElement>(null);
 
   // Filters search and category
-  const filteredCerts = certificatesData.filter((cert) => {
+  const filteredCerts = certificates.filter((cert) => {
     const matchesCategory = activeCategory === 'All' || cert.category === activeCategory;
     const matchesSearch =
       cert.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -324,21 +314,21 @@ export default function Certificates() {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex items-center justify-between border-t border-white/5 pt-4 mt-2">
+                <div className="mt-2 flex flex-col-reverse gap-3 border-t border-white/5 pt-4 sm:flex-row sm:items-center sm:justify-between">
                   <a
                     href={selectedCert.verifyUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     onMouseEnter={() => setCursorMode('hover')}
                     onMouseLeave={() => setCursorMode('default')}
-                    className="flex items-center gap-1.5 px-4.5 py-2.5 font-body text-xs font-semibold uppercase tracking-wider text-white border border-blue-500/30 rounded-lg bg-blue-500/10 hover:bg-blue-500 transition-premium shadow-premium-glow"
+                    className="inline-flex w-fit max-w-full shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-blue-500/30 bg-blue-500/10 px-4 py-3 font-body text-xs font-semibold uppercase tracking-wider text-white shadow-premium-glow transition-premium hover:bg-blue-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300"
                   >
                     Verify Credential
-                    <ExternalLink className="w-3.5 h-3.5" />
+                    <ExternalLink aria-hidden="true" className="h-4 w-4 shrink-0" />
                   </a>
                   <button
                     onClick={() => setSelectedCert(null)}
-                    className="font-body text-xs font-semibold uppercase tracking-wider text-subtext hover:text-white transition-colors"
+                    className="self-start py-2 font-body text-xs font-semibold uppercase tracking-wider text-subtext transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 sm:self-auto"
                   >
                     Close Viewer
                   </button>

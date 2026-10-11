@@ -21,6 +21,8 @@ import Certificates from './components/sections/Certificates';
 import Services from './components/sections/Services';
 import GitHub from './components/sections/GitHub';
 import Contact from './components/sections/Contact';
+import AdminApp from './components/admin/AdminApp';
+import { PortfolioContentProvider } from './store/PortfolioContentContext';
 
 export default function App() {
   const { loading, setTerminalOpen } = useUIStore();
@@ -52,8 +54,10 @@ export default function App() {
     setTerminalOpen(true);
   });
 
+  if (window.location.pathname === '/admin') return <AdminApp />;
+
   return (
-    <>
+    <PortfolioContentProvider>
       {/* 1. Loading Screen */}
       <LoadingScreen />
 
@@ -86,6 +90,6 @@ export default function App() {
           <Terminal />
         </>
       )}
-    </>
+    </PortfolioContentProvider>
   );
 }

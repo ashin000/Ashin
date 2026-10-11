@@ -5,9 +5,13 @@ import { ArrowRight, Download, Send } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
 import Magnetic from '../ui/Magnetic';
 import profileImage from '../../assets/profile.jpg';
+import { usePortfolioContent } from '../../store/PortfolioContentContext';
 
 export default function Hero() {
   const { setCursorMode } = useUIStore();
+  const { content } = usePortfolioContent();
+  const roles = Array.isArray(content.profile.roles) ? content.profile.roles : [];
+  const roleSequence = roles.flatMap((role) => [role, 2200]);
   const cardRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<number | null>(null);
 
@@ -76,7 +80,7 @@ export default function Hero() {
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.1 }}
             className="font-heading text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.1]"
           >
-            ASHIN R
+            {String(content.profile.name ?? 'ASHIN R')}
           </motion.h1>
 
           {/* Typing Role Animation */}
@@ -87,20 +91,7 @@ export default function Hero() {
             className="font-heading text-xl sm:text-2xl md:text-3xl font-semibold text-blue-400 min-h-[40px] flex items-center"
           >
             <TypeAnimation
-              sequence={[
-                'AI Engineer',
-                2200,
-                'Machine Learning Engineer',
-                2200,
-                'Full Stack Developer',
-                2200,
-                'Product Developer',
-                2200,
-                'Python Developer',
-                2200,
-                'Automation Engineer',
-                2200,
-              ]}
+              sequence={roleSequence.length ? roleSequence : ['Software Developer', 2200]}
               wrapper="span"
               speed={45}
               repeat={Infinity}
@@ -114,8 +105,7 @@ export default function Hero() {
             transition={{ duration: 0.6, ease: 'easeOut', delay: 0.3 }}
             className="font-body text-sm sm:text-base md:text-lg text-subtext leading-relaxed max-w-2xl mt-2"
           >
-            Building intelligent software that transforms ideas into real-world solutions through
-            Artificial Intelligence, Full Stack Development, and Modern Technologies.
+            {String(content.profile.summary ?? '')}
           </motion.p>
 
           {/* CTA Buttons */}
@@ -141,7 +131,7 @@ export default function Hero() {
             {/* Resume */}
             <Magnetic strength={0.15}>
               <a
-                href="/resume.pdf"
+                href={String(content.profile.resumeUrl ?? '/resume.pdf')}
                 download="Ashin-R-Resume.pdf"
                 onMouseEnter={() => setCursorMode('hover')}
                 onMouseLeave={() => setCursorMode('default')}
@@ -187,7 +177,7 @@ export default function Hero() {
 
             <div className="relative w-full h-full overflow-hidden rounded-xl" style={{ transform: 'translateZ(30px)' }}>
               <img
-                src={profileImage}
+                src={String(content.profile.imageUrl || profileImage)}
                 alt="Ashin R"
                 className="h-full w-full object-cover object-top"
               />

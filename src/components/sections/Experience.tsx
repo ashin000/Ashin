@@ -1,8 +1,9 @@
 import { motion } from 'framer-motion';
 import { Briefcase } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
+import { usePortfolioContent } from '../../store/PortfolioContentContext';
 
-const timelineEvents = [
+export const timelineEvents = [
   {
     year: '2024',
     title: 'Started Programming',
@@ -47,6 +48,8 @@ const timelineEvents = [
 
 export default function Experience() {
   const { setCursorMode } = useUIStore();
+  const { content } = usePortfolioContent();
+  const events = content.experience as unknown as typeof timelineEvents;
 
   return (
     <section
@@ -78,7 +81,7 @@ export default function Experience() {
         {/* Vertical Timeline Track */}
         <div className="relative border-l-2 border-white/5 ml-4 md:ml-32 pl-6 md:pl-12 flex flex-col gap-12">
           
-          {timelineEvents.map((event, index) => {
+          {events.map((event, index) => {
             return (
               <div key={event.title + index} className="relative group text-left">
                 

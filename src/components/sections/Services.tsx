@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useUIStore } from '../../store/uiStore';
+import { usePortfolioContent } from '../../store/PortfolioContentContext';
 import {
   Brain,
   Cpu,
@@ -13,7 +14,7 @@ import {
   HelpCircle,
 } from 'lucide-react';
 
-const servicesData = [
+export const servicesData = [
   {
     title: 'AI Development',
     description: 'Engineering agentic workflows, conversational agents, custom LLM fine-tuning, and retrieval-augmented generation (RAG) platforms.',
@@ -76,8 +77,15 @@ const servicesData = [
   },
 ];
 
+const serviceIcons = new Map(servicesData.map((service) => [service.title, service.icon] as const));
+
 export default function Services() {
   const { setCursorMode } = useUIStore();
+  const { content } = usePortfolioContent();
+  const editableServices = content.services.map((service) => ({
+    ...service,
+    icon: serviceIcons.get(String(service.iconKey ?? '')) ?? HelpCircle,
+  })) as unknown as typeof servicesData;
 
   const containerVariants = {
     hidden: {},
@@ -132,7 +140,7 @@ export default function Services() {
           variants={containerVariants}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8"
         >
-          {servicesData.map((service) => {
+          {editableServices.map((service) => {
             const Icon = service.icon;
             return (
               <motion.div

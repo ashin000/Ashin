@@ -1,9 +1,12 @@
 import { motion } from 'framer-motion';
 import { Target, Eye, Award } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
+import { usePortfolioContent } from '../../store/PortfolioContentContext';
 
 export default function About() {
   const { setCursorMode } = useUIStore();
+  const { content } = usePortfolioContent();
+  const aboutParagraphs = Array.isArray(content.about.paragraphs) ? content.about.paragraphs : [];
 
   const containerVariants = {
     hidden: {},
@@ -66,24 +69,21 @@ export default function About() {
                 variants={itemVariants}
                 className="font-heading text-xl sm:text-2xl md:text-3xl text-white font-medium leading-relaxed border-l-2 border-blue-500/30 pl-6 py-2"
               >
-                "My curiosity started with one question: <span className="text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.3)] font-semibold">How machines think like humans?</span>"
+                {String(content.about.opening ?? '')}
               </motion.p>
 
               <motion.p
                 variants={itemVariants}
                 className="font-body text-base md:text-lg text-subtext leading-relaxed mt-2"
               >
-                That single question inspired my journey into Artificial Intelligence. Today I build
-                intelligent software, AI systems, automation tools, IoT applications, and modern web
-                platforms that solve real-world problems.
+                {String(aboutParagraphs[0] ?? '')}
               </motion.p>
 
               <motion.p
                 variants={itemVariants}
                 className="font-body text-base md:text-lg text-subtext leading-relaxed"
               >
-                I believe every unfamiliar technology is simply another opportunity to learn. Whenever I
-                encounter a new challenge, I quickly adapt, learn what is necessary, and build the solution.
+                {String(aboutParagraphs[1] ?? '')}
               </motion.p>
             </motion.div>
           </div>
@@ -112,7 +112,7 @@ export default function About() {
                     Mission
                   </h3>
                   <p className="font-body text-xs text-subtext leading-relaxed">
-                    Pioneering intelligent software architectures that bridge complex data structures with intuitive human interfaces.
+                    {String(content.about.mission ?? '')}
                   </p>
                 </div>
               </motion.div>
@@ -132,7 +132,7 @@ export default function About() {
                     Vision
                   </h3>
                   <p className="font-body text-xs text-subtext leading-relaxed">
-                    Accelerating developer capabilities and enterprise scalability by automating deployment, systems, and workflow engines.
+                    {String(content.about.vision ?? '')}
                   </p>
                 </div>
               </motion.div>
@@ -152,7 +152,7 @@ export default function About() {
                     Core Values
                   </h3>
                   <p className="font-body text-xs text-subtext leading-relaxed">
-                    Cultivating a growth mindset, practicing technical integrity, and deploying responsive systems built on solid principles.
+                    {String(content.about.values ?? '')}
                   </p>
                 </div>
               </motion.div>

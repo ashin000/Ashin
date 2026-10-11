@@ -1,18 +1,20 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
-import { projectsData, type ProjectCaseStudy } from '../../data/projectsData';
+import type { ProjectCaseStudy } from '../../data/projectsData';
 import ProjectCaseStudyModal from '../ui/ProjectCaseStudyModal';
 import { useUIStore } from '../../store/uiStore';
-
-const categories = ['All', 'Artificial Intelligence', 'Full Stack', 'Data Science', 'IoT & Security'];
+import { usePortfolioContent } from '../../store/PortfolioContentContext';
 
 export default function Projects() {
   const { setCursorMode } = useUIStore();
+  const { content } = usePortfolioContent();
+  const projects = content.projects as unknown as ProjectCaseStudy[];
+  const categories = ['All', ...new Set(projects.map((project) => project.category).filter(Boolean))];
   const [activeCategory, setActiveCategory] = useState('All');
   const [selectedProject, setSelectedProject] = useState<ProjectCaseStudy | null>(null);
 
-  const filteredProjects = projectsData.filter((project) => {
+  const filteredProjects = projects.filter((project) => {
     if (activeCategory === 'All') return true;
     return project.category === activeCategory;
   });
@@ -28,7 +30,7 @@ export default function Projects() {
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 text-left">
+        <div className="flex flex-col gap-6 mb-16 text-left xl:flex-row xl:items-end xl:justify-between">
           <div>
             <span className="font-code text-xs text-blue-400 uppercase tracking-[0.2em] font-semibold mb-2">
               04 / PORTFOLIO
@@ -40,7 +42,7 @@ export default function Projects() {
           </div>
 
           {/* Filtering Bar */}
-          <div className="flex flex-wrap items-center gap-2 bg-white/5 border border-white/5 p-1.5 rounded-2xl md:rounded-full">
+          <div className="flex w-full flex-wrap items-center gap-2 rounded-2xl border border-white/10 bg-slate-900/70 p-2 shadow-lg shadow-black/20 xl:w-auto xl:max-w-full xl:justify-end">
             {categories.map((cat) => {
               const isActive = activeCategory === cat;
               return (
@@ -49,8 +51,10 @@ export default function Projects() {
                   onClick={() => setActiveCategory(cat)}
                   onMouseEnter={() => setCursorMode('hover')}
                   onMouseLeave={() => setCursorMode('default')}
-                  className={`px-4.5 py-2 font-body text-[10px] md:text-xs font-semibold uppercase tracking-wider rounded-xl md:rounded-full transition-all duration-300 ${
-                    isActive ? 'bg-white/5 text-white border border-white/10' : 'text-subtext hover:text-white'
+                  className={`shrink-0 whitespace-nowrap rounded-xl px-4 py-2.5 font-body text-[11px] md:text-xs font-semibold uppercase tracking-[0.08em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
+                    isActive
+                      ? 'border border-blue-400/40 bg-blue-500/20 text-blue-100 shadow-[0_0_18px_rgba(59,130,246,0.16)]'
+                      : 'border border-transparent text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   {cat}
