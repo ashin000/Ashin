@@ -13,6 +13,8 @@ export default function Terminal() {
   const { terminalOpen, setTerminalOpen, setCursorMode } = useUIStore();
   const { content } = usePortfolioContent();
   const [input, setInput] = useState('');
+  const [adminLoginStep, setAdminLoginStep] = useState<'idle' | 'username' | 'password' | 'checking'>('idle');
+  const [adminUsername, setAdminUsername] = useState('');
   const [history, setHistory] = useState<TerminalLine[]>([
     { text: 'System Console [v1.0.8]', type: 'success' },
     { text: 'Establishing secure link to Ashin R AI core...', type: 'output' },
@@ -77,16 +79,12 @@ export default function Terminal() {
       );
     } else if (['admin', 'admin login', 'sudo admin'].includes(trimmed)) {
       newHistory.push(
-        { text: 'Opening the private admin sign-in…', type: 'success' },
-        { text: 'Enter your username and password on the secure sign-in page.', type: 'output' }
+        { text: 'Private admin authentication started.', type: 'success' },
+        { text: 'Enter your username, then your password. Password input is hidden.', type: 'output' },
+        { text: 'Do not enter these credentials anywhere except your own trusted portfolio session.', type: 'output' }
       );
-      setHistory(newHistory);
-      setInput('');
-      window.setTimeout(() => {
-        setTerminalOpen(false);
-        window.location.assign('/admin');
-      }, 500);
-      return;
+      setAdminUsername('');
+      setAdminLoginStep('username');
     } else if (trimmed === 'sudo hire ashin') {
       newHistory.push(
         { text: 'Loading AI Engineer...', type: 'success' },
@@ -120,9 +118,61 @@ export default function Terminal() {
     setInput('');
   };
 
+  const handleAdminCredential = async () => {
+    const value = input;
+    setInput('');
+
+    if (adminLoginStep === 'username') {
+      const username = value.trim();
+      if (!username) {
+        setHistory((previous) => [...previous, { text: 'Username cannot be empty. Try again.', type: 'error' }]);
+        return;
+      }
+      setAdminUsername(username);
+      setAdminLoginStep('password');
+      setHistory((previous) => [...previous, { text: 'Username received. Enter password:', type: 'success' }]);
+      return;
+    }
+
+    if (adminLoginStep !== 'password') return;
+    if (!value) {
+      setHistory((previous) => [...previous, { text: 'Password cannot be empty. Try again.', type: 'error' }]);
+      return;
+    }
+
+    setAdminLoginStep('checking');
+    setHistory((previous) => [...previous, { text: 'Authenticating securely…', type: 'output' }]);
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: adminUsername, password: value }),
+      });
+      const result = await response.json() as { error?: string; authenticated?: boolean };
+      if (!response.ok) throw new Error(result.error ?? 'Authentication failed.');
+      setHistory((previous) => [...previous, { text: 'Authentication successful. Opening the admin editor…', type: 'success' }]);
+      setAdminLoginStep('idle');
+      window.setTimeout(() => {
+        setTerminalOpen(false);
+        window.location.assign('/admin');
+      }, 700);
+    } catch (error) {
+      setAdminUsername('');
+      setAdminLoginStep('username');
+      setHistory((previous) => [...previous, {
+        text: error instanceof Error ? `${error.message} Enter username to try again.` : 'Authentication failed. Enter username to try again.',
+        type: 'error',
+      }]);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleCommand(input);
+      if (adminLoginStep === 'username' || adminLoginStep === 'password') {
+        void handleAdminCredential();
+      } else if (adminLoginStep === 'idle') {
+        handleCommand(input);
+      }
     }
   };
 
@@ -154,7 +204,12 @@ export default function Terminal() {
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/30" />
                 <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/30" />
                 <button
-                  onClick={() => setTerminalOpen(false)}
+                  onClick={() => {
+                    setInput('');
+                    setAdminUsername('');
+                    setAdminLoginStep('idle');
+                    setTerminalOpen(false);
+                  }}
                   className="p-1 rounded hover:bg-white/5 text-subtext hover:text-white transition-colors"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -189,18 +244,20 @@ export default function Terminal() {
             {/* Input prompt bar */}
             <div className="border-t border-blue-400/20 px-4 sm:px-6 py-4 bg-[#101827] flex items-center gap-2">
               <span className="font-code text-xs sm:text-sm text-blue-300 font-bold select-none flex-shrink-0">
-                visitor@ashin.dev:~$
+                {adminLoginStep === 'username' ? 'admin username:' : adminLoginStep === 'password' ? 'admin password:' : adminLoginStep === 'checking' ? 'admin auth:' : 'visitor@ashin.dev:~$'}
               </span>
               <input
                 ref={inputRef}
-                type="text"
+                type={adminLoginStep === 'password' ? 'password' : 'text'}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 onFocus={() => setCursorMode('text')}
                 onBlur={() => setCursorMode('default')}
                 className="flex-1 min-w-0 bg-transparent border-none outline-none font-code text-sm sm:text-base text-white placeholder-slate-500 caret-blue-300"
-                placeholder="type command..."
+                placeholder={adminLoginStep === 'username' ? 'enter username…' : adminLoginStep === 'password' ? 'enter password…' : adminLoginStep === 'checking' ? 'verifying…' : 'type command...'}
+                autoComplete="off"
+                disabled={adminLoginStep === 'checking'}
                 autoFocus
               />
             </div>
