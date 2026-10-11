@@ -3,6 +3,9 @@ export interface Env {
   ADMIN_USERNAME: string;
   ADMIN_PASSWORD: string;
   SESSION_SECRET: string;
+  RESEND_API_KEY: string;
+  CONTACT_FROM_EMAIL: string;
+  CONTACT_TO_EMAIL: string;
 }
 
 export interface RequestContext {

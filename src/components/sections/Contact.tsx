@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import emailjs from '@emailjs/browser';
 import { Send, Phone, Mail, MapPin, Download, CheckCircle, AlertCircle } from 'lucide-react';
 import { FaGithub, FaLinkedin, FaInstagram } from 'react-icons/fa';
 import { useUIStore } from '../../store/uiStore';
@@ -25,6 +24,7 @@ export default function Contact() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (status !== 'idle' && status !== 'sending') setStatus('idle');
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
@@ -32,27 +32,22 @@ export default function Contact() {
     if (!formRef.current) return;
     setStatus('sending');
 
-    // Replace with your EmailJS credentials (e.g. env variables or placeholders)
-    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'service_placeholder';
-    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'template_placeholder';
-    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'public_placeholder';
-
-    if (serviceId === 'service_placeholder' || templateId === 'template_placeholder') {
-      // Premium Simulation Fallback if credentials are not configured
-      console.warn('EmailJS keys not configured. Simulating successful form delivery...');
-      setTimeout(() => {
-        setStatus('success');
-        setFormData({ user_name: '', user_email: '', subject: '', message: '' });
-      }, 1500);
-      return;
-    }
-
     try {
-      await emailjs.sendForm(serviceId, templateId, formRef.current, publicKey);
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          website: new FormData(formRef.current).get('website'),
+        }),
+      });
+      const result = await response.json() as { error?: string; sent?: boolean };
+      if (!response.ok || !result.sent) throw new Error(result.error ?? 'Could not send your message.');
       setStatus('success');
       setFormData({ user_name: '', user_email: '', subject: '', message: '' });
+      formRef.current.reset();
     } catch (err) {
-      console.error('EmailJS Error:', err);
+      console.error('Contact submission error:', err);
       setStatus('error');
     }
   };
@@ -148,13 +143,18 @@ export default function Contact() {
               <div className="w-full flex items-center justify-between pb-2 border-b border-white/5">
                 <span className="font-code text-xs text-blue-400 uppercase tracking-widest font-semibold flex items-center gap-2">
                   <FaLinkedin className="w-4 h-4 text-[#0A66C2]" />
-                  LinkedIn Profile Badge
+                  LinkedIn Profile
                 </span>
-                <span className="text-[10px] font-code text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 uppercase tracking-wider font-semibold">
-                  Verified
+                <span className="text-[10px] font-code text-blue-300 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20 uppercase tracking-wider font-semibold">
+                  View profile
                 </span>
               </div>
-              <LinkedInBadge />
+                  <LinkedInBadge
+                    vanity={String(content.contact.linkedin ?? '').split('/').filter(Boolean).pop() || 'ashin-r-05a4b9325'}
+                    name={String(content.profile.name ?? 'Ashin R')}
+                    headline={String((Array.isArray(content.profile.roles) ? content.profile.roles[0] : '') || 'AI & Machine Learning Engineer')}
+                    location={String(content.contact.location ?? '')}
+                  />
             </div>
 
             {/* Download Resume Block & Socials */}
@@ -223,6 +223,10 @@ export default function Contact() {
               className="glass-panel p-6 md:p-8 rounded-2xl border border-white/5 relative overflow-hidden"
             >
               <form ref={formRef} onSubmit={handleFormSubmit} className="flex flex-col gap-5 text-left">
+                <label aria-hidden="true" className="absolute -left-[10000px] h-px w-px overflow-hidden">
+                  Leave this field empty
+                  <input name="website" tabIndex={-1} autoComplete="off" />
+                </label>
                 {/* Name */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="user_name" className="font-heading text-[10px] font-bold text-white uppercase tracking-widest">
@@ -320,7 +324,7 @@ export default function Contact() {
                       className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2.5 font-body text-xs md:text-sm"
                     >
                       <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                      Error sending message. Please try emailing directly.
+                      Message was not sent. Please try the direct email link instead.
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -330,7 +334,7 @@ export default function Contact() {
                   <Magnetic strength={0.15}>
                     <button
                       type="submit"
-                      disabled={status === 'sending' || status === 'success'}
+                      disabled={status === 'sending'}
                       onMouseEnter={() => setCursorMode('hover')}
                       onMouseLeave={() => setCursorMode('default')}
                       className="flex items-center justify-center gap-2 px-6 py-3 border border-white/10 rounded-xl bg-white/5 hover:bg-white/10 hover:border-white/20 text-white font-body text-xs font-semibold uppercase tracking-wider transition-premium disabled:opacity-50"
