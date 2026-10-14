@@ -70,7 +70,7 @@ export default function App() {
           <Navbar />
 
           {/* 5. Main Content Wrapper */}
-          <main className="relative z-10 w-full overflow-x-hidden">
+          <main className="theme-light relative z-10 w-full overflow-x-hidden">
             <Hero />
             <About />
             <Stats />

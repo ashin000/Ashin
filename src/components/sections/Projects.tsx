@@ -22,7 +22,7 @@ export default function Projects() {
   return (
     <section
       id="projects"
-      className="relative py-24 overflow-hidden px-6 md:px-12 border-t border-white/5 bg-[#050816]"
+      className="theme-dark-section relative py-24 overflow-hidden px-6 md:px-12 border-t border-white/5 bg-[#050816]"
     >
       {/* Background visual glows */}
       <div className="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-blue-500/5 rounded-full blur-[140px] pointer-events-none" />
@@ -53,7 +53,7 @@ export default function Projects() {
                   onMouseLeave={() => setCursorMode('default')}
                   className={`shrink-0 whitespace-nowrap rounded-xl px-4 py-2.5 font-body text-[11px] md:text-xs font-semibold uppercase tracking-[0.08em] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 ${
                     isActive
-                      ? 'border border-blue-400/40 bg-blue-500/20 text-blue-100 shadow-[0_0_18px_rgba(59,130,246,0.16)]'
+                      ? 'border border-blue-400/40 bg-blue-500/20 text-blue-100 shadow-[0_0_18px_rgba(73,104,142,0.2)]'
                       : 'border border-transparent text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white'
                   }`}
                 >
@@ -117,7 +117,7 @@ export default function Projects() {
                     {project.techStack.slice(0, 3).map((tech) => (
                       <span
                         key={tech}
-                        className="font-code text-[9px] text-white/50 bg-white/5 border border-white/3 px-2 py-0.5 rounded"
+                        className="font-code text-[9px] text-white/80 bg-white/5 border border-white/3 px-2 py-0.5 rounded"
                       >
                         {tech}
                       </span>

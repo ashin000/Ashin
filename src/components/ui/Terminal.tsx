@@ -183,17 +183,17 @@ export default function Terminal() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 lg:p-10 bg-[#030610]/98 backdrop-blur-xl"
+          className="theme-light fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 lg:p-10 bg-[#243b5a]/25 backdrop-blur-xl"
         >
           {/* Shell Container */}
           <motion.div
             initial={{ scale: 0.95, y: 20 }}
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.95, y: 20 }}
-            className="w-full max-w-5xl h-[min(78svh,720px)] min-h-[360px] rounded-2xl border border-blue-400/30 bg-[#080c19] flex flex-col overflow-hidden shadow-[0_24px_100px_rgba(0,0,0,0.8),0_0_45px_rgba(59,130,246,0.18)] text-left ring-1 ring-white/10"
+            className="terminal-window w-full max-w-5xl h-[min(78svh,720px)] min-h-[360px] rounded-2xl border border-blue-400/30 bg-black flex flex-col overflow-hidden shadow-[0_24px_100px_rgba(0,0,0,0.45),0_0_45px_rgba(73,104,142,0.2)] text-left ring-1 ring-white/10"
           >
             {/* Window title bar */}
-            <div className="bg-[#121a2a] border-b border-white/10 px-4 sm:px-6 py-3.5 flex items-center justify-between select-none">
+            <div className="terminal-titlebar bg-[#111318] border-b border-white/10 px-4 sm:px-6 py-3.5 flex items-center justify-between select-none">
               <div className="flex items-center gap-2">
                 <TerminalIcon className="w-4 h-4 text-blue-400" />
                 <span className="font-code text-xs sm:text-sm text-white font-semibold">
@@ -219,7 +219,7 @@ export default function Terminal() {
 
             {/* Terminal logs area */}
             <div
-              className="flex-1 p-5 sm:p-8 overflow-y-auto bg-[#050816] font-code text-sm sm:text-base flex flex-col gap-3 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
+              className="terminal-output flex-1 p-5 sm:p-8 overflow-y-auto bg-black font-code text-sm sm:text-base flex flex-col gap-3 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent"
               onClick={() => inputRef.current?.focus()}
             >
               {history.map((line, idx) => (
@@ -242,7 +242,7 @@ export default function Terminal() {
             </div>
 
             {/* Input prompt bar */}
-            <div className="border-t border-blue-400/20 px-4 sm:px-6 py-4 bg-[#101827] flex items-center gap-2">
+            <div className="terminal-commandbar border-t border-blue-400/20 px-4 sm:px-6 py-4 bg-[#111318] flex items-center gap-2">
               <span className="font-code text-xs sm:text-sm text-blue-300 font-bold select-none flex-shrink-0">
                 {adminLoginStep === 'username' ? 'admin username:' : adminLoginStep === 'password' ? 'admin password:' : adminLoginStep === 'checking' ? 'admin auth:' : 'visitor@ashin.dev:~$'}
               </span>
@@ -254,7 +254,7 @@ export default function Terminal() {
                 onKeyDown={handleKeyDown}
                 onFocus={() => setCursorMode('text')}
                 onBlur={() => setCursorMode('default')}
-                className="flex-1 min-w-0 bg-transparent border-none outline-none font-code text-sm sm:text-base text-white placeholder-slate-500 caret-blue-300"
+                className="flex-1 min-w-0 bg-transparent border-none outline-none font-code text-sm sm:text-base text-white placeholder-slate-400 caret-blue-300"
                 placeholder={adminLoginStep === 'username' ? 'enter username…' : adminLoginStep === 'password' ? 'enter password…' : adminLoginStep === 'checking' ? 'verifying…' : 'type command...'}
                 autoComplete="off"
                 disabled={adminLoginStep === 'checking'}

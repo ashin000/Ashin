@@ -103,11 +103,10 @@ function ParticleNetwork() {
           // Fade lines out based on distance
           const alpha = 1.0 - dist / maxDistance;
           
-          // Theme color accent blend (#3B82F6 and #60A5FA)
-          // R: 96/255=0.37, G: 165/255=0.64, B: 250/255=0.98
-          const r = 0.23 * alpha; // subtle primary accent
-          const g = 0.51 * alpha;
-          const b = 0.96 * alpha;
+          // Restrained steel-blue accent for the navy theme.
+          const r = 0.37 * alpha;
+          const g = 0.49 * alpha;
+          const b = 0.66 * alpha;
 
           // Color for start node
           lineColorArray[lIdx] = r;
@@ -152,7 +151,7 @@ function ParticleNetwork() {
           />
         </bufferGeometry>
         <pointsMaterial
-          color="#60A5FA"
+          color="#94AFD0"
           size={0.07}
           sizeAttenuation={true}
           transparent={true}
@@ -198,7 +197,7 @@ export default function Background3D() {
   }, []);
 
   return (
-    <div className="fixed inset-0 -z-10 bg-[#050816] pointer-events-none noise-bg grid-bg">
+    <div className="fixed inset-0 -z-10 bg-white pointer-events-none noise-bg grid-bg">
       {enableCanvas && (
         <Canvas
           camera={{ position: [0, 0, 5], fov: 60 }}
@@ -211,7 +210,7 @@ export default function Background3D() {
       )}
       {/* Cinematic subtle glow circles */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse-slow" />
-      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none" />
     </div>
   );
 }

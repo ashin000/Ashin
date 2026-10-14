@@ -62,7 +62,7 @@ export const skillsData = [
   {
     category: 'Programming',
     icon: Code,
-    color: '#3B82F6', // Blue
+    color: '#94AFD0', // Steel blue
     skills: [
       { name: 'Python', icon: SiPython },
       { name: 'Java', icon: FaJava },
@@ -75,7 +75,7 @@ export const skillsData = [
   {
     category: 'Frontend',
     icon: Layout,
-    color: '#10B981', // Emerald
+    color: '#94AFD0',
     skills: [
       { name: 'React', icon: FaReact },
       { name: 'Vite', icon: SiVite },
@@ -88,7 +88,7 @@ export const skillsData = [
   {
     category: 'Backend',
     icon: Server,
-    color: '#EC4899', // Pink
+    color: '#94AFD0',
     skills: [
       { name: 'FastAPI', icon: SiFastapi },
       { name: 'Flask', icon: SiFlask },
@@ -99,7 +99,7 @@ export const skillsData = [
   {
     category: 'Databases',
     icon: Database,
-    color: '#F59E0B', // Amber
+    color: '#94AFD0',
     skills: [
       { name: 'Firebase', icon: SiFirebase },
       { name: 'MongoDB', icon: SiMongodb },
@@ -110,7 +110,7 @@ export const skillsData = [
   {
     category: 'Artificial Intelligence',
     icon: BrainCircuit,
-    color: '#8B5CF6', // Violet
+    color: '#94AFD0',
     skills: [
       { name: 'TensorFlow', icon: SiTensorflow },
       { name: 'PyTorch', icon: SiPytorch },
@@ -123,7 +123,7 @@ export const skillsData = [
   {
     category: 'DevOps & Tools',
     icon: GitBranch,
-    color: '#EF4444', // Red
+    color: '#94AFD0',
     skills: [
       { name: 'Linux OS', icon: FaLinux },
       { name: 'AWS Cloud', icon: FaAws },
@@ -162,7 +162,7 @@ export default function Skills() {
   return (
     <section
       id="skills"
-      className="relative py-24 overflow-hidden px-6 md:px-12 border-t border-white/5 bg-[#050816]"
+      className="theme-dark-section relative py-24 overflow-hidden px-6 md:px-12 border-t border-white/5 bg-[#050816]"
     >
       {/* Background visual detail */}
       <div className="absolute top-1/4 right-0 w-80 h-80 bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -196,7 +196,7 @@ export default function Skills() {
         >
           {content.skills.map((category, index) => {
             const categoryName = String(category.category ?? 'Skills');
-            const categoryColor = String(category.color ?? '#3B82F6');
+            const categoryColor = '#94AFD0';
             const Icon = categoryIcons[categoryName] ?? Code;
             const skillNames = Array.isArray(category.skills) ? category.skills : [];
             const isHovered = hoveredIndex === index;

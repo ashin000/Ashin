@@ -12,7 +12,7 @@ export const statsData = [
     suffix: '+',
     label: 'Projects Completed',
     icon: FolderCode,
-    glowColor: 'rgba(59, 130, 246, 0.15)',
+    glowColor: 'rgba(73, 104, 142, 0.12)',
   },
   {
     value: 3,
@@ -55,7 +55,7 @@ export default function Stats() {
   })) as unknown as typeof statsData;
 
   return (
-    <section className="py-16 relative overflow-hidden px-6 md:px-12 bg-[#050816] border-t border-white/5">
+    <section className="theme-dark-section py-16 relative overflow-hidden px-6 md:px-12 bg-[#050816] border-t border-white/5">
       <div className="max-w-7xl mx-auto relative z-10">
         
         {/* Responsive Grid */}
@@ -90,7 +90,7 @@ export default function Stats() {
                       enableScrollSpy={true}
                       scrollSpyOnce={true}
                     />
-                    <span className="text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.4)] ml-0.5">
+                    <span className="text-blue-400 drop-shadow-[0_0_8px_rgba(148,175,208,0.35)] ml-0.5">
                       {stat.suffix}
                     </span>
                   </span>

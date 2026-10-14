@@ -64,7 +64,7 @@ export default function LoadingScreen() {
             y: -100,
             transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as const },
           }}
-          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#050816] text-white"
+          className="theme-light fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white text-slate-900"
         >
           {/* Background Grid Pattern */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none" />
@@ -75,7 +75,7 @@ export default function LoadingScreen() {
               viewBox="0 0 100 100"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-full h-full text-blue-500 drop-shadow-[0_0_15px_rgba(59,130,246,0.6)]"
+              className="w-full h-full text-blue-500 drop-shadow-[0_0_15px_rgba(73,104,142,0.45)]"
             >
               {/* Outer hexagonal border */}
               <motion.polygon
@@ -171,20 +171,20 @@ export default function LoadingScreen() {
             <div className="relative w-full h-[3px] bg-white/5 rounded-full overflow-hidden mb-3">
               <motion.div
                 style={{ width: `${loadingProgress}%` }}
-                className="h-full bg-gradient-to-r from-blue-600 via-blue-400 to-glow shadow-[0_0_10px_#60A5FA]"
+                className="h-full bg-gradient-to-r from-blue-700 via-blue-400 to-glow shadow-[0_0_10px_#94AFD0]"
                 transition={{ ease: 'easeOut' as const }}
               />
             </div>
 
             {/* Numerical Percentage */}
-            <div className="flex justify-between w-full text-[10px] font-code text-subtext/60 uppercase tracking-widest">
+            <div className="flex justify-between w-full text-[10px] font-code text-subtext/90 uppercase tracking-widest">
               <span>SYSTEM LOADING</span>
               <span className="font-semibold text-blue-400">{loadingProgress}%</span>
             </div>
           </div>
 
           {/* Glowing dot moving in background */}
-          <div className="absolute bottom-10 text-[9px] font-code text-subtext/40 tracking-[0.2em] uppercase">
+          <div className="absolute bottom-10 text-[9px] font-code text-subtext/85 tracking-[0.2em] uppercase">
             EST. 2026 // NEURAL NODE STABLE
           </div>
         </motion.div>

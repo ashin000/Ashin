@@ -12,9 +12,9 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative border-t border-white/5 bg-[#050816] py-12 overflow-hidden">
+    <footer className="theme-light theme-dark-section relative border-t border-white/5 bg-[#050816] py-12 overflow-hidden">
       {/* Background radial overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(59,130,246,0.03),transparent_60%)] pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,rgba(73,104,142,0.08),transparent_60%)] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
         
@@ -73,7 +73,7 @@ export default function Footer() {
           <p className="font-body text-xs text-subtext/60">
             &copy; {currentYear} Ashin R. All rights reserved.
           </p>
-          <p className="font-body text-[10px] text-subtext/40">
+          <p className="font-body text-[10px] text-subtext/85">
             Designed and Developed by{' '}
             <span className="text-subtext/70 font-semibold hover:text-blue-400 transition-colors">
               Ashin R

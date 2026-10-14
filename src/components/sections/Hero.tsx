@@ -95,7 +95,7 @@ export default function Hero() {
               wrapper="span"
               speed={45}
               repeat={Infinity}
-              className="drop-shadow-[0_0_10px_rgba(96,165,250,0.35)]"
+              className="drop-shadow-[0_0_10px_rgba(148,175,208,0.35)]"
             />
           </motion.div>
 
@@ -170,18 +170,14 @@ export default function Hero() {
               transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg)',
               transformStyle: 'preserve-3d',
             }}
-            className="w-72 h-96 sm:w-80 sm:h-[420px] rounded-2xl glass-panel relative p-3 border border-white/10 shadow-premium-glow transition-all duration-100 ease-out flex items-center justify-center overflow-hidden cursor-pointer"
+            className="w-72 h-96 sm:w-80 sm:h-[420px] relative rounded-2xl border border-slate-200 bg-slate-50 p-3 shadow-[0_14px_40px_rgba(15,23,42,0.08)] transition-all duration-100 ease-out flex items-center justify-center overflow-hidden cursor-pointer"
           >
-            {/* Glass Frame Borders */}
-            <div className="absolute inset-2 border border-white/5 rounded-xl pointer-events-none" />
-
-            <div className="relative w-full h-full overflow-hidden rounded-xl" style={{ transform: 'translateZ(30px)' }}>
+            <div className="relative w-full h-full overflow-hidden rounded-xl border border-slate-200 bg-white" style={{ transform: 'translateZ(30px)' }}>
               <img
                 src={String(content.profile.imageUrl || profileImage)}
                 alt="Ashin R"
                 className="h-full w-full object-cover object-top"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-transparent to-blue-950/10" />
             </div>
             
           </motion.div>
@@ -190,7 +186,7 @@ export default function Hero() {
       </div>
 
       {/* Slide down arrow */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-subtext/40 animate-bounce cursor-pointer" onClick={() => scrollToSection('#about')}>
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-subtext/90 animate-bounce cursor-pointer" onClick={() => scrollToSection('#about')}>
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>

@@ -1,4 +1,5 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Search, X, Award, ExternalLink, Calendar } from 'lucide-react';
 import { useUIStore } from '../../store/uiStore';
@@ -26,7 +27,7 @@ export const certificatesData: Certificate[] = [
     credentialId: 'TF-904-2025',
     category: 'Machine Learning',
     verifyUrl: 'https://verify.com',
-    imageColor: 'from-orange-500/20 to-amber-500/20',
+    imageColor: 'from-blue-700/35 to-blue-900/35',
     imageUrl: '',
   },
   {
@@ -37,7 +38,7 @@ export const certificatesData: Certificate[] = [
     credentialId: 'GCP-MLE-4820',
     category: 'Cloud',
     verifyUrl: 'https://verify.com',
-    imageColor: 'from-blue-500/20 to-indigo-500/20',
+    imageColor: 'from-blue-700/35 to-blue-900/35',
     imageUrl: '',
   },
   {
@@ -48,7 +49,7 @@ export const certificatesData: Certificate[] = [
     credentialId: 'DL-SPEC-773',
     category: 'Artificial Intelligence',
     verifyUrl: 'https://verify.com',
-    imageColor: 'from-purple-500/20 to-pink-500/20',
+    imageColor: 'from-blue-700/35 to-blue-900/35',
     imageUrl: '',
   },
   {
@@ -59,7 +60,7 @@ export const certificatesData: Certificate[] = [
     credentialId: 'PY-ARC-0028',
     category: 'Programming',
     verifyUrl: 'https://verify.com',
-    imageColor: 'from-green-500/20 to-teal-500/20',
+    imageColor: 'from-blue-700/35 to-blue-900/35',
     imageUrl: '',
   },
   {
@@ -70,7 +71,7 @@ export const certificatesData: Certificate[] = [
     credentialId: 'IDF-UIUX-492',
     category: 'UI UX',
     verifyUrl: 'https://verify.com',
-    imageColor: 'from-pink-500/20 to-rose-500/20',
+    imageColor: 'from-blue-700/35 to-blue-900/35',
     imageUrl: '',
   },
   {
@@ -81,7 +82,7 @@ export const certificatesData: Certificate[] = [
     credentialId: 'HACK-AI-OPENAI',
     category: 'Hackathons',
     verifyUrl: 'https://verify.com',
-    imageColor: 'from-blue-600/30 to-purple-600/30',
+    imageColor: 'from-blue-700/35 to-blue-900/35',
     imageUrl: '',
   },
 ];
@@ -94,8 +95,18 @@ export default function Certificates() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCert, setSelectedCert] = useState<Certificate | null>(null);
+  const certificateGradient = 'from-blue-700/35 to-blue-900/35';
 
   const carouselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!selectedCert) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [selectedCert]);
 
   // Filters search and category
   const filteredCerts = certificates.filter((cert) => {
@@ -142,13 +153,13 @@ export default function Certificates() {
           <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
             {/* Search Input */}
             <div className="relative flex-1 md:flex-initial">
-              <Search className="w-4 h-4 text-subtext/60 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-subtext/90 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search credentials..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full md:w-56 pl-10 pr-4 py-2 font-body text-xs text-white placeholder-subtext/40 bg-white/5 border border-white/5 rounded-xl focus:outline-none focus:border-blue-500/50 transition-colors"
+                className="w-full md:w-56 pl-10 pr-4 py-2 font-body text-xs text-white placeholder-subtext/75 bg-white/5 border border-white/5 rounded-xl focus:outline-none focus:border-blue-500/50 transition-colors"
               />
             </div>
           </div>
@@ -192,13 +203,15 @@ export default function Certificates() {
                     }}
                     onMouseEnter={() => setCursorMode('hover')}
                     onMouseLeave={() => setCursorMode('default')}
-                    className="flex-shrink-0 w-80 sm:w-96 snap-start glass-panel p-6 rounded-2xl border border-white/5 relative overflow-hidden transition-all duration-300 cursor-pointer flex flex-col justify-between h-72 text-left select-none"
+                    className={`flex-shrink-0 w-80 sm:w-96 snap-start glass-panel p-6 rounded-2xl border border-white/5 relative overflow-hidden transition-all duration-300 cursor-pointer flex flex-col justify-between ${cert.imageUrl ? 'h-[22rem]' : 'h-72'} text-left select-none`}
                   >
                     {/* Background abstract gradient mockup */}
-                    <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${cert.imageColor}`} />
+                    {!cert.imageUrl && <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${certificateGradient}`} />}
 
                     {cert.imageUrl ? (
-                      <img src={cert.imageUrl} alt={`${cert.title} certificate`} className="absolute inset-0 h-full w-full object-cover opacity-15" />
+                      <div className="relative z-[1] h-28 w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                        <img src={cert.imageUrl} alt={`${cert.title} certificate`} loading="lazy" className="h-full w-full object-contain" />
+                      </div>
                     ) : null}
 
                     <div className="relative z-[1] flex flex-col gap-4 mt-2">
@@ -206,7 +219,7 @@ export default function Certificates() {
                         <div className="p-2.5 rounded-xl bg-white/5 border border-white/10 text-blue-400 shadow-premium-glow">
                           <Award className="w-5 h-5" />
                         </div>
-                        <span className="font-code text-[8px] font-bold text-subtext/60 uppercase tracking-widest bg-white/5 border border-white/5 px-2 py-0.5 rounded">
+                        <span className="font-code text-[8px] font-bold text-subtext/90 uppercase tracking-widest bg-white/5 border border-white/5 px-2 py-0.5 rounded">
                           {cert.category}
                         </span>
                       </div>
@@ -222,7 +235,7 @@ export default function Certificates() {
                     </div>
 
                     <div className="relative z-[1] flex items-center justify-between border-t border-white/5 pt-4 mt-4">
-                      <div className="flex items-center gap-1.5 font-body text-[10px] text-subtext/60">
+                      <div className="flex items-center gap-1.5 font-body text-[10px] text-subtext/90">
                         <Calendar className="w-3.5 h-3.5" />
                         {cert.date}
                       </div>
@@ -266,12 +279,12 @@ export default function Certificates() {
 
         {/* Cert Modal Viewer */}
         <AnimatePresence>
-          {selectedCert && (
+          {selectedCert && createPortal(
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-60 flex items-center justify-center p-6 bg-background/80 backdrop-blur-md"
+              className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto overscroll-contain p-4 sm:p-6 bg-background/80 backdrop-blur-md"
             >
               {/* Click outside to close */}
               <div className="absolute inset-0 cursor-pointer" onClick={() => setSelectedCert(null)} />
@@ -281,7 +294,10 @@ export default function Certificates() {
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
-                className="relative w-full max-w-xl bg-[#0F172A] border border-white/10 p-6 md:p-8 rounded-2xl shadow-premium-glow-lg flex flex-col gap-6 z-10 text-left"
+                role="dialog"
+                aria-modal="true"
+                aria-label={`${selectedCert.title} certificate details`}
+                className="relative my-auto max-h-[calc(100dvh-2rem)] w-full max-w-xl overflow-y-auto overscroll-contain bg-[#0F172A] border border-white/10 p-6 md:p-8 rounded-2xl shadow-premium-glow-lg flex flex-col gap-6 z-10 text-left"
               >
                 {/* Close Button */}
                 <button
@@ -292,14 +308,14 @@ export default function Certificates() {
                 </button>
 
                 {/* Abstract Certificate Visual Header */}
-                <div className={`h-40 rounded-xl bg-gradient-to-tr ${selectedCert.imageColor} border border-white/5 flex flex-col items-center justify-center relative overflow-hidden`}>
+                <div className={`h-40 rounded-xl bg-gradient-to-tr ${certificateGradient} border border-white/5 flex flex-col items-center justify-center relative overflow-hidden`}>
                   {selectedCert.imageUrl ? (
-                    <img src={selectedCert.imageUrl} alt={`${selectedCert.title} certificate`} className="absolute inset-0 h-full w-full object-contain bg-[#080c19]" />
+                    <img src={selectedCert.imageUrl} alt={`${selectedCert.title} certificate`} className="absolute inset-0 h-full w-full object-contain bg-slate-50" />
                   ) : (
                     <>
-                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1),transparent_70%)]" />
-                      <Award className="w-12 h-12 text-blue-400 drop-shadow-[0_0_10px_rgba(96,165,250,0.5)] mb-2" />
-                      <span className="font-heading text-xs font-semibold text-white/40 uppercase tracking-[0.2em]">{selectedCert.issuer}</span>
+                      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(73,104,142,0.18),transparent_70%)]" />
+                      <Award className="w-12 h-12 text-blue-400 drop-shadow-[0_0_10px_rgba(148,175,208,0.4)] mb-2" />
+                      <span className="font-heading text-xs font-semibold text-white/80 uppercase tracking-[0.2em]">{selectedCert.issuer}</span>
                     </>
                   )}
                 </div>
@@ -320,11 +336,11 @@ export default function Certificates() {
 
                   <div className="grid grid-cols-2 gap-4 border-t border-white/5 pt-4">
                     <div>
-                      <span className="font-body text-[10px] text-subtext/50 uppercase tracking-wider">Issue Date</span>
-                      <p className="font-body text-xs font-medium text-white/80 mt-0.5">{selectedCert.date}</p>
+                      <span className="font-body text-[10px] text-subtext/90 uppercase tracking-wider">Issue Date</span>
+                      <p className="font-body text-xs font-medium text-white/90 mt-0.5">{selectedCert.date}</p>
                     </div>
                     <div>
-                      <span className="font-body text-[10px] text-subtext/50 uppercase tracking-wider">Credential ID</span>
+                      <span className="font-body text-[10px] text-subtext/90 uppercase tracking-wider">Credential ID</span>
                       <p className="font-code text-xs font-medium text-blue-400 mt-0.5">{selectedCert.credentialId}</p>
                     </div>
                   </div>
@@ -352,7 +368,8 @@ export default function Certificates() {
                 </div>
 
               </motion.div>
-            </motion.div>
+            </motion.div>,
+            document.body,
           )}
         </AnimatePresence>
 

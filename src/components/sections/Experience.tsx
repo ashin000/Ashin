@@ -54,7 +54,7 @@ export default function Experience() {
   return (
     <section
       id="experience"
-      className="relative py-24 overflow-hidden px-6 md:px-12 border-t border-white/5 bg-[#050816]"
+      className="theme-dark-section relative py-24 overflow-hidden px-6 md:px-12 border-t border-white/5 bg-[#050816]"
     >
       {/* Background ambient lighting */}
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
@@ -87,13 +87,13 @@ export default function Experience() {
                 
                 {/* Year Label (Positioned absolute left on large screens) */}
                 <div className="hidden md:block absolute right-[100%] mr-20 top-1 text-right w-32">
-                  <span className="font-code text-sm font-bold tracking-wider text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.35)]">
+                  <span className="font-code text-sm font-bold tracking-wider text-blue-400 drop-shadow-[0_0_8px_rgba(148,175,208,0.3)]">
                     {event.year}
                   </span>
                 </div>
 
                 {/* Timeline Node Point */}
-                <div className="absolute left-[-31px] md:left-[-55px] top-1.5 w-4 h-4 rounded-full border border-blue-500/50 bg-[#050816] flex items-center justify-center transition-all duration-300 group-hover:border-blue-400 group-hover:scale-125 shadow-[0_0_8px_rgba(59,130,246,0.2)]">
+                <div className="absolute left-[-31px] md:left-[-55px] top-1.5 w-4 h-4 rounded-full border border-blue-500/50 bg-[#050816] flex items-center justify-center transition-all duration-300 group-hover:border-blue-400 group-hover:scale-125 shadow-[0_0_8px_rgba(73,104,142,0.25)]">
                   <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                 </div>
 
@@ -120,7 +120,7 @@ export default function Experience() {
                 >
                   {/* Subtle vertical card background bar */}
                   <div className={`absolute top-0 bottom-0 left-0 w-1 ${
-                    event.type === 'aspiration' ? 'bg-gradient-to-b from-blue-500 to-purple-500' : 'bg-blue-500/30'
+                    event.type === 'aspiration' ? 'bg-gradient-to-b from-blue-400 to-blue-700' : 'bg-blue-500/30'
                   }`} />
 
                   {/* Header details */}
@@ -129,7 +129,7 @@ export default function Experience() {
                       <h3 className="font-heading text-lg md:text-xl font-bold text-white tracking-tight">
                         {event.title}
                       </h3>
-                      <div className="font-body text-xs md:text-sm text-subtext/80 font-medium flex items-center gap-1.5 mt-0.5">
+                      <div className="font-body text-xs md:text-sm text-subtext/95 font-medium flex items-center gap-1.5 mt-0.5">
                         <Briefcase className="w-3.5 h-3.5 text-blue-400" />
                         {event.company}
                       </div>
@@ -142,7 +142,7 @@ export default function Experience() {
                         ? 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
                         : event.type === 'aspiration'
                         ? 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
-                        : 'bg-white/5 text-subtext/80 border border-white/10'
+                        : 'bg-white/5 text-subtext/95 border border-white/10'
                     }`}>
                       {event.type}
                     </span>

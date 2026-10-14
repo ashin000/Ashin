@@ -60,7 +60,14 @@ function parseContent(value: unknown): PortfolioContent | null {
   if (!value || typeof value !== 'object') return null;
   const candidate = value as Record<string, unknown>;
   if (sections.some(({ key }) => !(key in candidate))) return null;
-  return candidate as unknown as PortfolioContent;
+  const certificates = Array.isArray(candidate.certificates)
+    ? candidate.certificates.map((certificate) => (
+      certificate && typeof certificate === 'object'
+        ? { imageUrl: '', ...(certificate as Record<string, unknown>) }
+        : certificate
+    ))
+    : candidate.certificates;
+  return { ...candidate, certificates } as unknown as PortfolioContent;
 }
 
 function blankItem(template?: EditableItem): EditableItem {
@@ -194,12 +201,12 @@ export default function AdminApp() {
   };
 
   if (authenticated === null) {
-    return <div className="min-h-screen bg-[#050816]" aria-label="Checking admin session" />;
+    return <div className="min-h-screen bg-white" aria-label="Checking admin session" />;
   }
 
   if (!authenticated) {
     return (
-      <main className="grid min-h-screen place-items-center bg-[#050816] px-5 py-12 text-white">
+      <main className="theme-light grid min-h-screen place-items-center bg-white px-5 py-12 text-slate-900">
         <div className="w-full max-w-md rounded-3xl border border-white/10 bg-[#0b1220] p-7 shadow-[0_30px_100px_rgba(0,0,0,0.45)] sm:p-9">
           <a href="/" className="mb-10 inline-flex items-center gap-2 text-sm text-slate-400 transition hover:text-white">
             <ArrowLeft className="h-4 w-4" /> Back to portfolio
@@ -220,18 +227,18 @@ export default function AdminApp() {
               <input type="password" autoComplete="current-password" required value={credentials.password} onChange={(event) => setCredentials({ ...credentials, password: event.target.value })} className={fieldClass} />
             </label>
             {notice && <p role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/5 px-4 py-3 text-sm text-rose-200">{notice}</p>}
-            <button disabled={busy} className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-4 py-3.5 text-sm font-bold text-white transition hover:bg-blue-400 disabled:cursor-wait disabled:opacity-60">
+            <button disabled={busy} className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-4 py-3.5 text-sm font-bold text-white transition hover:bg-blue-600 disabled:cursor-wait disabled:opacity-60">
               <ShieldCheck className="h-4 w-4" /> {busy ? 'Checking…' : 'Sign in securely'}
             </button>
           </form>
-          <p className="mt-5 text-xs leading-5 text-slate-500">Admin credentials are checked by the Cloudflare server and are never stored in this page.</p>
+          <p className="mt-5 text-xs leading-5 text-slate-400">Admin credentials are checked by the Cloudflare server and are never stored in this page.</p>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#050816] text-slate-100">
+    <main className="theme-light min-h-screen bg-white text-slate-900">
       <header className="sticky top-0 z-20 border-b border-white/10 bg-[#050816]/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-4 px-4 py-4 sm:px-8">
           <div>
@@ -257,7 +264,7 @@ export default function AdminApp() {
         <section className="min-w-0 rounded-3xl border border-white/10 bg-[#0a101d] p-5 sm:p-8">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-6">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-500">Content editor</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-slate-400">Content editor</p>
               <h2 className="mt-1 text-2xl font-bold">{sections.find(({ key }) => key === activeSection)?.label}</h2>
             </div>
             {isList && <button onClick={addItem} className="inline-flex items-center gap-2 rounded-xl border border-blue-400/25 bg-blue-400/10 px-4 py-2.5 text-sm font-bold text-blue-200 hover:bg-blue-400/15"><Plus className="h-4 w-4" /> Add item</button>}
@@ -268,7 +275,7 @@ export default function AdminApp() {
               <article key={String(item.id ?? `${activeSection}-${itemIndex}`)} className="rounded-2xl border border-white/10 bg-[#080d19] p-4 sm:p-6">
                 <div className="mb-5 flex items-center justify-between gap-3">
                   <h3 className="font-semibold text-slate-200">{String(item.title ?? item.name ?? item.category ?? `Item ${itemIndex + 1}`)}</h3>
-                  {isList && <button aria-label={`Delete item ${itemIndex + 1}`} onClick={() => setContent((previous) => ({ ...previous, [activeSection]: (previous[activeSection] as EditableItem[]).filter((_, index) => index !== itemIndex) }))} className="rounded-lg p-2 text-slate-500 transition hover:bg-rose-400/10 hover:text-rose-300"><Trash2 className="h-4 w-4" /></button>}
+                  {isList && <button aria-label={`Delete item ${itemIndex + 1}`} onClick={() => setContent((previous) => ({ ...previous, [activeSection]: (previous[activeSection] as EditableItem[]).filter((_, index) => index !== itemIndex) }))} className="rounded-lg p-2 text-slate-400 transition hover:bg-rose-400/10 hover:text-rose-300"><Trash2 className="h-4 w-4" /></button>}
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   {Object.entries(item).map(([field, value]) => {
@@ -285,7 +292,7 @@ export default function AdminApp() {
                                 <button type="button" aria-label="Remove uploaded image" onClick={() => updateField(itemIndex, field, '')} className="absolute right-1 top-1 rounded-md bg-black/75 p-1 text-white hover:bg-rose-500"><X className="h-3.5 w-3.5" /></button>
                               </div>
                             ) : (
-                              <div className="grid h-24 w-36 place-items-center rounded-lg border border-white/10 bg-white/[0.03] text-slate-500"><ImagePlus className="h-7 w-7" /></div>
+                              <div className="grid h-24 w-36 place-items-center rounded-lg border border-white/10 bg-white/[0.03] text-slate-400"><ImagePlus className="h-7 w-7" /></div>
                             )}
                             <div className="min-w-[180px] flex-1">
                               <label className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-blue-400/25 bg-blue-400/10 px-3.5 py-2.5 text-xs font-bold text-blue-100 transition hover:bg-blue-400/20">
@@ -293,7 +300,7 @@ export default function AdminApp() {
                                 {uploading === uploadKey ? 'Optimizing…' : value ? 'Choose another image' : 'Choose image'}
                                 <input type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading !== null} onChange={(event) => { void handleImageUpload(event.target.files?.[0], itemIndex, field); event.currentTarget.value = ''; }} className="sr-only" />
                               </label>
-                              <p className="mt-2 text-xs leading-5 text-slate-500">JPG, PNG, or WebP. Images are optimized in your browser and saved with your content (up to 180 KB each).</p>
+                              <p className="mt-2 text-xs leading-5 text-slate-400">JPG, PNG, or WebP. Images are optimized in your browser and saved with your content (up to 180 KB each).</p>
                             </div>
                           </div>
                         </div>
@@ -323,7 +330,7 @@ export default function AdminApp() {
 
           <div className="sticky bottom-4 mt-8 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-white/10 bg-[#111a2a]/95 p-3 backdrop-blur-xl">
             <p aria-live="polite" className="px-2 text-xs text-slate-300">{notice}</p>
-            <button disabled={busy} onClick={handleSave} className="inline-flex items-center gap-2 rounded-xl bg-blue-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-400 disabled:cursor-wait disabled:opacity-60"><Save className="h-4 w-4" /> {busy ? 'Saving…' : 'Save and publish'}</button>
+            <button disabled={busy} onClick={handleSave} className="inline-flex items-center gap-2 rounded-xl bg-blue-500 px-5 py-3 text-sm font-bold text-white transition hover:bg-blue-600 disabled:cursor-wait disabled:opacity-60"><Save className="h-4 w-4" /> {busy ? 'Saving…' : 'Save and publish'}</button>
           </div>
         </section>
       </div>

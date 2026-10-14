@@ -59,16 +59,16 @@ export default function CustomCursor() {
         return {
           width: 50,
           height: 50,
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          borderColor: '#60A5FA',
+          backgroundColor: 'rgba(73, 104, 142, 0.12)',
+          borderColor: '#94AFD0',
           borderWidth: 1.5,
         };
       case 'magnetic':
         return {
           width: 65,
           height: 65,
-          backgroundColor: 'rgba(96, 165, 250, 0.15)',
-          borderColor: '#3B82F6',
+          backgroundColor: 'rgba(148, 175, 208, 0.15)',
+          borderColor: '#49688E',
           borderWidth: 2,
         };
       case 'text':
@@ -132,9 +132,9 @@ export default function CustomCursor() {
           zIndex: 10000,
           width: 6,
           height: 6,
-          backgroundColor: '#3B82F6',
+          backgroundColor: '#94AFD0',
           borderRadius: '50%',
-          boxShadow: '0 0 10px #60A5FA, 0 0 20px #3B82F6',
+          boxShadow: '0 0 10px #94AFD0, 0 0 20px #49688E',
         }}
         className="hidden md:block"
       />

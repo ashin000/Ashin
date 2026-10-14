@@ -123,10 +123,10 @@ export default function GitHub() {
     const grid = [];
     const colors = [
       'bg-white/[0.02] border-white/3', // No commits
-      'bg-emerald-950/20 border-emerald-900/20', // Low commits
-      'bg-emerald-900/40 border-emerald-800/30', // Medium-low commits
-      'bg-emerald-700/60 border-emerald-600/30', // Medium-high commits
-      'bg-emerald-500/80 border-emerald-400/40 shadow-[0_0_5px_rgba(16,185,129,0.3)]', // High commits
+      'bg-blue-950/50 border-blue-900/40', // Low commits
+      'bg-blue-800/50 border-blue-700/40', // Medium-low commits
+      'bg-blue-600/60 border-blue-500/40', // Medium-high commits
+      'bg-blue-500/80 border-blue-400/40 shadow-[0_0_5px_rgba(73,104,142,0.3)]', // High commits
     ];
 
     for (let day = 0; day < 7; day++) {
@@ -260,7 +260,7 @@ export default function GitHub() {
                       <span className="font-code text-[9px] font-semibold text-blue-400 bg-blue-500/5 px-2 py-0.5 rounded">
                         {repo.language}
                       </span>
-                      <div className="flex items-center gap-3 text-subtext/60">
+                      <div className="flex items-center gap-3 text-subtext/90">
                         <span className="flex items-center gap-1 font-code text-[10px]">
                           <Star className="w-3 h-3 text-yellow-500" />
                           {repo.stargazers_count}
@@ -309,7 +309,7 @@ export default function GitHub() {
               </div>
 
               {/* Labels details */}
-              <div className="flex items-center justify-between text-[9px] font-code text-subtext/60 mt-1">
+              <div className="flex items-center justify-between text-[9px] font-code text-subtext/90 mt-1">
                 <span>Less active</span>
                 <div className="flex gap-1 items-center">
                   <div className="w-2 h-2 rounded-[1.5px] bg-white/[0.02] border border-white/5" />

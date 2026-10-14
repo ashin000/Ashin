@@ -19,61 +19,61 @@ export const servicesData = [
     title: 'AI Development',
     description: 'Engineering agentic workflows, conversational agents, custom LLM fine-tuning, and retrieval-augmented generation (RAG) platforms.',
     icon: Brain,
-    color: '#3B82F6',
+    color: '#94AFD0',
   },
   {
     title: 'Machine Learning',
     description: 'Building predictive pipelines, computer vision models, anomaly detection scripts, and robust data regressions.',
     icon: Cpu,
-    color: '#8B5CF6',
+    color: '#94AFD0',
   },
   {
     title: 'Web Development',
     description: 'Designing premium frontends with smooth animations, high-fidelity responsive grids, and clean design tokens.',
     icon: Globe,
-    color: '#10B981',
+    color: '#94AFD0',
   },
   {
     title: 'Full Stack Development',
     description: 'Architecting end-to-end applications from secure database ledgers to responsive user dashboards.',
     icon: Database,
-    color: '#F59E0B',
+    color: '#94AFD0',
   },
   {
     title: 'IoT Solutions',
     description: 'Integrating microcontrollers (Raspberry Pi, Arduino) with sensor suites, automation circuits, and remote telemetry.',
     icon: Radio,
-    color: '#EF4444',
+    color: '#94AFD0',
   },
   {
     title: 'Automation Eng.',
     description: 'Writing high-speed scripts to automate files parsing, reporting workflows, system cron-jobs, and data scraping.',
     icon: Zap,
-    color: '#EC4899',
+    color: '#94AFD0',
   },
   {
     title: 'Cloud Deployment',
     description: 'Deploying dockerized containers to secure AWS/GCP servers with robust load balancers and domain routing.',
     icon: Cloud,
-    color: '#06B6D4',
+    color: '#94AFD0',
   },
   {
     title: 'Custom Software',
     description: 'Developing tailored desktop applications, command-line utilities, and custom workflow programs.',
     icon: Terminal,
-    color: '#10B981',
+    color: '#94AFD0',
   },
   {
     title: 'API Development',
     description: 'Designing secure, well-documented RESTful & GraphQL endpoints using FastAPI, Express, and Flask.',
     icon: Layers,
-    color: '#6366F1',
+    color: '#94AFD0',
   },
   {
     title: 'Technical Consultation',
     description: 'Providing advice on technology stacks, software design patterns, ML deployment steps, and product architecture.',
     icon: HelpCircle,
-    color: '#6B7280',
+    color: '#94AFD0',
   },
 ];
 
@@ -142,6 +142,7 @@ export default function Services() {
         >
           {editableServices.map((service) => {
             const Icon = service.icon;
+            const accentColor = '#94AFD0';
             return (
               <motion.div
                 key={service.title}
@@ -154,7 +155,7 @@ export default function Services() {
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                   style={{
-                    background: `radial-gradient(circle at 10% 10%, ${service.color}0a, transparent 40%)`,
+                    background: `radial-gradient(circle at 10% 10%, ${accentColor}0a, transparent 40%)`,
                   }}
                 />
 
@@ -162,9 +163,9 @@ export default function Services() {
                 <div
                   className="p-3 rounded-xl border w-fit mb-5 transition-colors duration-300"
                   style={{
-                    backgroundColor: `${service.color}10`,
-                    borderColor: `${service.color}30`,
-                    color: service.color,
+                    backgroundColor: `${accentColor}10`,
+                    borderColor: `${accentColor}30`,
+                    color: accentColor,
                   }}
                 >
                   <Icon className="w-5 h-5" />

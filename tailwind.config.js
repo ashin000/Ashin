@@ -7,14 +7,26 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "#050816",
-        secondary: "#0F172A",
-        card: "rgba(255, 255, 255, 0.06)",
-        borderColor: "rgba(255, 255, 255, 0.08)", // Avoid styling conflict with native border color utilities
-        text: "#FFFFFF",
-        subtext: "#94A3B8",
-        primaryAccent: "#3B82F6",
-        glow: "#60A5FA",
+        background: "#ffffff",
+        secondary: "#f8fafc",
+        card: "#ffffff",
+        borderColor: "#e2e8f0", // Avoid styling conflict with native border color utilities
+        text: "#111827",
+        subtext: "#475569",
+        blue: {
+          100: "#e8edf3",
+          200: "#d5dee9",
+          300: "#9aabc0",
+          400: "#526985",
+          500: "#243b5a",
+          600: "#1e334f",
+          700: "#172a43",
+          800: "#111f33",
+          900: "#0b1524",
+          950: "#070d17",
+        },
+        primaryAccent: "#243b5a",
+        glow: "#385577",
         success: "#22C55E",
       },
       fontFamily: {
@@ -23,9 +35,9 @@ export default {
         code: ["'JetBrains Mono'", "monospace"],
       },
       boxShadow: {
-        'premium-glow': '0 0 20px rgba(96, 165, 250, 0.15)',
-        'premium-glow-lg': '0 0 35px rgba(96, 165, 250, 0.25)',
-        'accent-glow': '0 0 20px rgba(59, 130, 246, 0.2)',
+        'premium-glow': '0 8px 24px rgba(36, 59, 90, 0.08)',
+        'premium-glow-lg': '0 14px 36px rgba(36, 59, 90, 0.12)',
+        'accent-glow': '0 8px 24px rgba(36, 59, 90, 0.12)',
       },
       animation: {
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',

@@ -106,7 +106,7 @@ export default function Contact() {
                   <Mail className="w-4.5 h-4.5" />
                 </div>
                 <div>
-                  <span className="block font-body text-[9px] text-subtext/50 uppercase tracking-wider">Email Address</span>
+                  <span className="block font-body text-[9px] text-subtext/90 uppercase tracking-wider">Email Address</span>
                   <a href={`mailto:${String(content.contact.email ?? '')}`} className="font-code text-xs md:text-sm text-white hover:text-blue-400 transition-colors">
                     {String(content.contact.email ?? '')}
                   </a>
@@ -118,7 +118,7 @@ export default function Contact() {
                   <Phone className="w-4.5 h-4.5" />
                 </div>
                 <div>
-                  <span className="block font-body text-[9px] text-subtext/50 uppercase tracking-wider">Phone number</span>
+                  <span className="block font-body text-[9px] text-subtext/90 uppercase tracking-wider">Phone number</span>
                   <a href={`tel:${String(content.contact.phone ?? '')}`} className="font-code text-xs md:text-sm text-white hover:text-blue-400 transition-colors">
                     {String(content.contact.phone ?? '')}
                   </a>
@@ -130,7 +130,7 @@ export default function Contact() {
                   <MapPin className="w-4.5 h-4.5" />
                 </div>
                 <div>
-                  <span className="block font-body text-[9px] text-subtext/50 uppercase tracking-wider">Current Location</span>
+                  <span className="block font-body text-[9px] text-subtext/90 uppercase tracking-wider">Current Location</span>
                   <span className="font-code text-xs md:text-sm text-white">
                     {String(content.contact.location ?? '')}
                   </span>
@@ -142,7 +142,7 @@ export default function Contact() {
             <div className="glass-panel p-5 rounded-2xl border border-white/5 bg-white/[0.02] flex flex-col items-center gap-3 overflow-hidden shadow-premium-glow">
               <div className="w-full flex items-center justify-between pb-2 border-b border-white/5">
                 <span className="font-code text-xs text-blue-400 uppercase tracking-widest font-semibold flex items-center gap-2">
-                  <FaLinkedin className="w-4 h-4 text-[#0A66C2]" />
+                  <FaLinkedin className="w-4 h-4 text-blue-300" />
                   LinkedIn Profile
                 </span>
                 <span className="text-[10px] font-code text-blue-300 bg-blue-500/10 px-2 py-0.5 rounded-full border border-blue-500/20 uppercase tracking-wider font-semibold">
@@ -241,7 +241,7 @@ export default function Contact() {
                     onChange={handleInputChange}
                     onFocus={() => setCursorMode('text')}
                     onBlur={() => setCursorMode('default')}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/5 rounded-xl font-body text-xs md:text-sm text-white placeholder-subtext/30 focus:outline-none focus:border-blue-500/50 transition-colors"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/5 rounded-xl font-body text-xs md:text-sm text-white placeholder-subtext/75 focus:outline-none focus:border-blue-500/50 transition-colors"
                     placeholder="Enter your name"
                   />
                 </div>
@@ -260,7 +260,7 @@ export default function Contact() {
                     onChange={handleInputChange}
                     onFocus={() => setCursorMode('text')}
                     onBlur={() => setCursorMode('default')}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/5 rounded-xl font-body text-xs md:text-sm text-white placeholder-subtext/30 focus:outline-none focus:border-blue-500/50 transition-colors"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/5 rounded-xl font-body text-xs md:text-sm text-white placeholder-subtext/75 focus:outline-none focus:border-blue-500/50 transition-colors"
                     placeholder="name@company.com"
                   />
                 </div>
@@ -279,7 +279,7 @@ export default function Contact() {
                     onChange={handleInputChange}
                     onFocus={() => setCursorMode('text')}
                     onBlur={() => setCursorMode('default')}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/5 rounded-xl font-body text-xs md:text-sm text-white placeholder-subtext/30 focus:outline-none focus:border-blue-500/50 transition-colors"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/5 rounded-xl font-body text-xs md:text-sm text-white placeholder-subtext/75 focus:outline-none focus:border-blue-500/50 transition-colors"
                     placeholder="Opportunities, projects, questions..."
                   />
                 </div>
@@ -298,7 +298,7 @@ export default function Contact() {
                     onChange={handleInputChange}
                     onFocus={() => setCursorMode('text')}
                     onBlur={() => setCursorMode('default')}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/5 rounded-xl font-body text-xs md:text-sm text-white placeholder-subtext/30 focus:outline-none focus:border-blue-500/50 transition-colors resize-none"
+                    className="w-full px-4 py-3 bg-white/5 border border-white/5 rounded-xl font-body text-xs md:text-sm text-white placeholder-subtext/75 focus:outline-none focus:border-blue-500/50 transition-colors resize-none"
                     placeholder="Write your message details..."
                   />
                 </div>
