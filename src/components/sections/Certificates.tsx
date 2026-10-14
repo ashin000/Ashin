@@ -278,9 +278,11 @@ export default function Certificates() {
         </div>
 
         {/* Cert Modal Viewer */}
-        <AnimatePresence>
-          {selectedCert && createPortal(
-            <motion.div
+        {createPortal(
+          <AnimatePresence>
+            {selectedCert && (
+              <motion.div
+                key={selectedCert.id}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -368,10 +370,11 @@ export default function Certificates() {
                 </div>
 
               </motion.div>
-            </motion.div>,
-            document.body,
-          )}
-        </AnimatePresence>
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
+        )}
 
       </div>
     </section>
