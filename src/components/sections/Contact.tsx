@@ -20,17 +20,22 @@ export default function Contact() {
   });
 
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (status !== 'idle' && status !== 'sending') setStatus('idle');
+    if (status !== 'idle' && status !== 'sending') {
+      setStatus('idle');
+      setStatusMessage('');
+    }
   };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formRef.current) return;
     setStatus('sending');
+    setStatusMessage('');
 
     try {
       const response = await fetch('/api/contact', {
@@ -41,14 +46,25 @@ export default function Contact() {
           website: new FormData(formRef.current).get('website'),
         }),
       });
-      const result = await response.json() as { error?: string; sent?: boolean };
-      if (!response.ok || !result.sent) throw new Error(result.error ?? 'Could not send your message.');
+      const responseText = await response.text();
+      let result: { error?: string; sent?: boolean } = {};
+      if (responseText) {
+        try {
+          result = JSON.parse(responseText) as { error?: string; sent?: boolean };
+        } catch {
+          // A proxy or missing server function can return HTML instead of the API's JSON response.
+        }
+      }
+      if (!response.ok || !result.sent) {
+        throw new Error(result.error ?? `Message service is unavailable (HTTP ${response.status}). Please try again later.`);
+      }
       setStatus('success');
       setFormData({ user_name: '', user_email: '', subject: '', message: '' });
       formRef.current.reset();
     } catch (err) {
       console.error('Contact submission error:', err);
       setStatus('error');
+      setStatusMessage(err instanceof Error ? err.message : 'Message was not sent. Please try again.');
     }
   };
 
@@ -324,7 +340,7 @@ export default function Contact() {
                       className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 flex items-center gap-2.5 font-body text-xs md:text-sm"
                     >
                       <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                      Message was not sent. Please try the direct email link instead.
+                      {statusMessage || 'Message was not sent. Please try the direct email link instead.'}
                     </motion.div>
                   )}
                 </AnimatePresence>

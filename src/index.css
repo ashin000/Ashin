@@ -206,7 +206,7 @@ body {
 /* Black navigation treatment requested for contrast against the white portfolio. */
 .theme-light.navbar-dark {
   color: #ffffff;
-  background-color: #08090c !important;
+  background-color: #000000 !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
 }
 

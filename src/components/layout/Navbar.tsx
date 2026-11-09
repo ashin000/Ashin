@@ -62,8 +62,8 @@ export default function Navbar() {
       transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className={`theme-light navbar-dark fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         scrolled
-          ? 'py-4 bg-[#08090c] backdrop-blur-md border-b border-white/10'
-          : 'py-6 bg-[#08090c]'
+          ? 'py-4 bg-black backdrop-blur-md border-b border-white/10'
+          : 'py-6 bg-black'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
@@ -172,7 +172,7 @@ export default function Navbar() {
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="lg:hidden absolute top-[100%] left-0 right-0 bg-[#08090c] backdrop-blur-xl border-b border-white/10 overflow-hidden"
+            className="lg:hidden absolute top-[100%] left-0 right-0 bg-black backdrop-blur-xl border-b border-white/10 overflow-hidden"
           >
             <nav className="flex flex-col p-6 gap-4">
               {navItems.map((item) => {

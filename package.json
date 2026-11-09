@@ -8,6 +8,8 @@
   },
   "scripts": {
     "dev": "vite",
+    "dev:pages": "npm run build && wrangler pages dev dist",
+    "db:migrate:local": "wrangler d1 migrations apply portfolio-content-db --local",
     "build": "tsc -b && tsc -p tsconfig.functions.json && vite build",
     "lint": "oxlint",
     "preview": "vite preview"

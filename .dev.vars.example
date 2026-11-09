@@ -1,0 +1,9 @@
+# Copy this file to .dev.vars for local Cloudflare Pages development.
+# Use your real Resend key and email addresses. Do not commit .dev.vars.
+ADMIN_USERNAME=ashin
+ADMIN_PASSWORD=local-development-password
+SESSION_SECRET=replace-with-a-random-local-secret
+
+RESEND_API_KEY=re_your_real_resend_api_key
+CONTACT_FROM_EMAIL=contact@your-verified-domain.com
+CONTACT_TO_EMAIL=your-email@example.com

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ArrowLeft, ImagePlus, LockKeyhole, LogOut, Plus, Save, ShieldCheck, Trash2, X } from 'lucide-react';
+import { ArrowLeft, ImagePlus, LockKeyhole, LogOut, Mail, Plus, Save, ShieldCheck, Trash2, X } from 'lucide-react';
 import { defaultPortfolioContent } from '../../data/defaultPortfolioContent';
 import type { EditableItem, EditableValue, PortfolioContent } from '../../data/portfolioContent';
 
@@ -90,6 +90,7 @@ export default function AdminApp() {
   const [content, setContent] = useState<PortfolioContent>(defaultPortfolioContent);
   const [activeSection, setActiveSection] = useState<keyof PortfolioContent>('profile');
   const [busy, setBusy] = useState(false);
+  const [recoveryOpen, setRecoveryOpen] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
   const [notice, setNotice] = useState('');
 
@@ -137,6 +138,26 @@ export default function AdminApp() {
       await loadSavedContent();
     } catch (error) {
       setNotice(error instanceof Error ? error.message : 'Could not sign in.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handlePasswordRecovery = async () => {
+    setBusy(true);
+    setNotice('');
+    try {
+      const response = await fetch('/api/admin/password-reset', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: credentials.username }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? 'Could not start password recovery.');
+      setRecoveryOpen(false);
+      setNotice('If the account details match, recovery instructions have been emailed to the portfolio owner.');
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Could not start password recovery.');
     } finally {
       setBusy(false);
     }
@@ -226,6 +247,17 @@ export default function AdminApp() {
               <span className={labelClass}>Password</span>
               <input type="password" autoComplete="current-password" required value={credentials.password} onChange={(event) => setCredentials({ ...credentials, password: event.target.value })} className={fieldClass} />
             </label>
+            <button type="button" onClick={() => setRecoveryOpen((open) => !open)} className="-mt-2 text-sm font-semibold text-blue-300 transition hover:text-blue-200">
+              Forgot password?
+            </button>
+            {recoveryOpen && (
+              <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+                <p className="text-sm leading-6 text-slate-300">Enter the admin username above, then send recovery instructions to the portfolio owner.</p>
+                <button type="button" disabled={busy || !credentials.username.trim()} onClick={handlePasswordRecovery} className="mt-3 inline-flex items-center gap-2 rounded-lg border border-blue-400/30 bg-blue-400/10 px-3.5 py-2.5 text-xs font-bold text-blue-100 transition hover:bg-blue-400/20 disabled:cursor-not-allowed disabled:opacity-60">
+                  <Mail className="h-4 w-4" /> {busy ? 'Sending…' : 'Email recovery instructions'}
+                </button>
+              </div>
+            )}
             {notice && <p role="alert" className="rounded-xl border border-rose-400/20 bg-rose-400/5 px-4 py-3 text-sm text-rose-200">{notice}</p>}
             <button disabled={busy} className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-4 py-3.5 text-sm font-bold text-white transition hover:bg-blue-600 disabled:cursor-wait disabled:opacity-60">
               <ShieldCheck className="h-4 w-4" /> {busy ? 'Checking…' : 'Sign in securely'}
@@ -239,7 +271,7 @@ export default function AdminApp() {
 
   return (
     <main className="theme-light min-h-screen bg-white text-slate-900">
-      <header className="sticky top-0 z-20 border-b border-white/10 bg-[#050816]/90 backdrop-blur-xl">
+      <header className="sticky top-0 z-20 border-b border-white/10 bg-black/95 text-white backdrop-blur-xl">
         <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-4 px-4 py-4 sm:px-8">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-300">Portfolio CMS</p>
