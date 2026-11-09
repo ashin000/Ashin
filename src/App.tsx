@@ -1,11 +1,10 @@
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import Lenis from 'lenis';
 import { useUIStore } from './store/uiStore';
 import { useKonamiCode } from './hooks/useKonamiCode';
 
 // Components
 import LoadingScreen from './components/ui/LoadingScreen';
-import Background3D from './components/ui/Background3D';
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
 import Terminal from './components/ui/Terminal';
@@ -23,6 +22,8 @@ import GitHub from './components/sections/GitHub';
 import Contact from './components/sections/Contact';
 import AdminApp from './components/admin/AdminApp';
 import { PortfolioContentProvider } from './store/PortfolioContentContext';
+
+const Background3D = lazy(() => import('./components/ui/Background3D'));
 
 export default function App() {
   const { loading, setTerminalOpen } = useUIStore();
@@ -64,7 +65,9 @@ export default function App() {
       {!loading && (
         <>
           {/* 2. Interactive 3D Canvas Background */}
-          <Background3D />
+          <Suspense fallback={null}>
+            <Background3D />
+          </Suspense>
 
           {/* 3. Glassmorphic Navigation Bar */}
           <Navbar />
