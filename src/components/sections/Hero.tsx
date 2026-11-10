@@ -176,6 +176,8 @@ export default function Hero() {
               <img
                 src={String(content.profile.imageUrl || profileImage)}
                 alt="Ashin R"
+                fetchPriority="high"
+                decoding="async"
                 className="h-full w-full object-cover object-top"
               />
             </div>

@@ -33,6 +33,7 @@ export default function Footer() {
           <Magnetic strength={0.3}>
             <a
               href="https://github.com/ashin000"
+              aria-label="Ashin R on GitHub"
               target="_blank"
               rel="noopener noreferrer"
               onMouseEnter={() => setCursorMode('magnetic')}
@@ -44,7 +45,8 @@ export default function Footer() {
           </Magnetic>
           <Magnetic strength={0.3}>
             <a
-              href="https://in.linkedin.com/in/ashin-r-05a4b9325"
+              href="https://www.linkedin.com/in/ashin-r-05a4b9325/"
+              aria-label="Ashin R on LinkedIn"
               target="_blank"
               rel="noopener noreferrer"
               onMouseEnter={() => setCursorMode('magnetic')}
@@ -57,6 +59,7 @@ export default function Footer() {
           <Magnetic strength={0.3}>
             <a
               href="https://instagram.com"
+              aria-label="Instagram"
               target="_blank"
               rel="noopener noreferrer"
               onMouseEnter={() => setCursorMode('magnetic')}

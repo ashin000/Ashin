@@ -29,7 +29,7 @@ export const defaultPortfolioContent: PortfolioContent = {
     email: 'ashin@example.com',
     phone: '+91 98765 43210',
     location: 'Kerala, India',
-    linkedin: 'https://in.linkedin.com/in/ashin-r-05a4b9325',
+    linkedin: 'https://www.linkedin.com/in/ashin-r-05a4b9325/',
     github: 'https://github.com/ashin000',
     instagram: 'https://instagram.com',
     introTitle: "Let's Build Something Revolutionary",

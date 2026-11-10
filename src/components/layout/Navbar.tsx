@@ -126,6 +126,7 @@ export default function Navbar() {
               onMouseEnter={() => setCursorMode('magnetic')}
               onMouseLeave={() => setCursorMode('default')}
               title="Open Shell Terminal"
+              aria-label="Open shell terminal"
               className="p-2.5 rounded-lg border border-white/5 bg-white/5 hover:bg-white/5 text-subtext hover:text-white transition-premium"
             >
               <TerminalIcon className="w-4.5 h-4.5 text-blue-400 drop-shadow-[0_0_5px_rgba(148,175,208,0.35)]" />
@@ -151,12 +152,15 @@ export default function Navbar() {
         <div className="flex lg:hidden items-center gap-3">
           <button
             onClick={toggleTerminal}
+            aria-label="Open shell terminal"
             className="p-2 rounded-lg border border-white/5 bg-white/5 text-blue-400"
           >
             <TerminalIcon className="w-4 h-4" />
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
             className="p-2 rounded-lg border border-white/5 bg-white/5 text-white"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

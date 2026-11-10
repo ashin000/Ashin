@@ -193,6 +193,7 @@ export default function Contact() {
                 <Magnetic strength={0.3}>
                   <a
                     href={String(content.contact.linkedin ?? '#')}
+                    aria-label="Ashin R on LinkedIn"
                     target="_blank"
                     rel="noopener noreferrer"
                     onMouseEnter={() => setCursorMode('magnetic')}
@@ -205,6 +206,7 @@ export default function Contact() {
                 <Magnetic strength={0.3}>
                   <a
                     href={String(content.contact.github ?? '#')}
+                    aria-label="Ashin R on GitHub"
                     target="_blank"
                     rel="noopener noreferrer"
                     onMouseEnter={() => setCursorMode('magnetic')}

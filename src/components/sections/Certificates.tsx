@@ -156,6 +156,7 @@ export default function Certificates() {
               <Search className="w-4 h-4 text-subtext/90 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
+                aria-label="Search certificates and hackathons"
                 placeholder="Search credentials..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}

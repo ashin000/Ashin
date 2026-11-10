@@ -190,7 +190,7 @@ export default function GitHub() {
               >
                 {/* Profile Image with Ring Glow */}
                 <div className="relative w-18 h-18 rounded-full overflow-hidden border-2 border-blue-500/30 p-1 flex-shrink-0">
-                  <img src={profile.avatar_url} alt={profile.name} className="w-full h-full rounded-full object-cover" />
+                  <img src={profile.avatar_url} alt={profile.name} loading="lazy" decoding="async" className="w-full h-full rounded-full object-cover" />
                 </div>
                 
                 <div className="flex-1 flex flex-col gap-2.5">
